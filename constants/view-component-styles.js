@@ -3,7 +3,7 @@ export const CENTER_VIEW = {
     justifyContent: "center",
     alignItems: "center",
     padding: '10%',
-    marginTop: "30%"
+    marginTop: "50%"
 };
 
 export const BOTTOM_VIEW = {

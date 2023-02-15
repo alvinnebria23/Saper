@@ -1,14 +1,21 @@
 import { extendTheme, NativeBaseProvider } from 'native-base';
-import LoginScreen from './screens/login-screen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { LoginScreen, RegisterScreen } from './screens';
 import theme from './theme';
 
+const Stack = createStackNavigator();
 
 export default function App() {
   
-
   return (
     <NativeBaseProvider theme={theme && theme}>
-        <LoginScreen />
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name='Login' component={LoginScreen} />
+            <Stack.Screen name='Register' component={RegisterScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </NativeBaseProvider>
   );
 }
