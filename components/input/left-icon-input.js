@@ -1,25 +1,25 @@
 import { Icon, Input } from 'native-base';
-import { Ionicons } from '@expo/vector-icons';
 
 const LeftIconInput = ({ 
     placeholder, 
-    onChangeText, 
+    onChange, 
     type = 'text' ,
     inputLeftElement = '',
     inputRightElement = '',
+    value,
 }) => {
-
     return (
         <Input 
             variant={'rounded'}
             placeholder={placeholder}
-            onChangeText={onChangeText}
             shadow={'4'}
             focusOutlineColor={'#FF4E00'}
             backgroundColor={'white'}
             type={type}
+            onChangeText={onChange}
             InputLeftElement={inputLeftElement}
             InputRightElement={inputRightElement}
+            value={value}
         />
     );
 }

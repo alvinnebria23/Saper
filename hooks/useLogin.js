@@ -1,17 +1,17 @@
 
 import React, { useState } from 'react';
+import loginScreenValidation from '../validations/login-screen-validation';
 
 export default useLogin = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [accountFound, setAccountFound] = useState(true);
-    const onPress = () => {
-        username && password ? setAccountFound(true) : setAccountFound(false);
-    }
-    
-    const onChangeText = (label, text) => {
-        label === 'username' ? setUsername(text) : setPassword(text);
+    const { validateInput } = loginScreenValidation();
+    const onSubmit = (data) => {
+        if(!validateInput(data['username'], data['password'])){
+            setAccountFound(false);
+            return;
+        }
+        setAccountFound(true);
     }
 
     const onPressShowPassword = () => {
@@ -19,8 +19,7 @@ export default useLogin = () => {
     }
     
     return {
-        onPress,
-        onChangeText,
+        onSubmit,
         onPressShowPassword,
         showPassword,
         accountFound,
