@@ -1,4 +1,4 @@
-import { Icon, Input } from 'native-base';
+import { Input } from 'native-base';
 
 const LeftIconInput = ({ 
     placeholder, 
@@ -10,6 +10,8 @@ const LeftIconInput = ({
 }) => {
     return (
         <Input 
+            size='sm'
+            h={'35'}
             variant={'rounded'}
             placeholder={placeholder}
             shadow={'4'}

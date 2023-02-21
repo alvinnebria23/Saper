@@ -6,7 +6,8 @@ const RoundedButton = ({ text, onPress }) => {
         <Button 
             bg={'primary.50'} 
             color={'white'} 
-            style={{ width: '100%', marginTop: '20%' }} 
+            size={'35'}
+            style={{ width: '100%', marginTop: '40%' }} 
             variant={'rounded'} 
             shadow={4}
             onPress={onPress}
