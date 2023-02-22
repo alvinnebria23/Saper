@@ -6,12 +6,13 @@ export default useLogin = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [accountFound, setAccountFound] = useState(true);
     const { validateInput } = loginScreenValidation();
-    const onSubmit = (data) => {
+    const onSubmit = (navigation, data) => {
         if(!validateInput(data['username'], data['password'])){
             setAccountFound(false);
             return;
         }
         setAccountFound(true);
+        navigation.navigate('Home');
     }
 
     const onPressShowPassword = () => {
