@@ -77,7 +77,7 @@ const LoginScreen = ({ navigation }) => {
                     </FormControl.ErrorMessage>
                 </Column>
             </FormControl>
-            <RoundedButton text={'Log in'} onPress={handleSubmit(onSubmit)} />
+            <RoundedButton text={'Log in'} onPress={handleSubmit(onSubmit.bind(this, navigation))} />
         </View>
         <View style={BOTTOM_VIEW}>
             <Row alignItems={'center'}>
