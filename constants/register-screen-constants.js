@@ -20,8 +20,8 @@ export const INIT_ACCOUNT_INFORMATION_INPUTS = [
         iconName: 'lock-outline',
     },
     {
-        name: 'fullname',
-        placeHolder: 'Full name',
+        name: 'confirmPassword',
+        placeHolder: 'Confirm password',
         iconName: 'lock-open-outline',
     },
 ];
