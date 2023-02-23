@@ -5,8 +5,11 @@ export default useCommon = () => {
         }
         navigation.navigate(screen);
     }
-
+    const capitalizeFirstLetter = (value) => {
+        return value.charAt(0).toUpperCase() + value.slice(1);
+    }
     return {
         onPressNavigate,
+        capitalizeFirstLetter,
     };
 }
