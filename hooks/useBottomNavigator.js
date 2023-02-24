@@ -1,6 +1,6 @@
 import React , { useState } from "react";
 export default useBottomNavigator = () => {
-    const [selected, setSelected] = useState(1);
+    const [selected, setSelected] = useState(0);
     const onPressTab = (index) => {
         setSelected(index);
     }

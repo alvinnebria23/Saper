@@ -3,16 +3,20 @@ import {  Box, Text, Icon, HStack, Center, Pressable, NativeBaseProvider } from 
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { BottomTabNavigator } from '../components/tab';
+import DashboardScreen from './dashboard-screen';
+import useBottomNavigator from '../hooks/useBottomNavigator';
 
 const HomeScreen = ({ navigation }) => {
-  const [selected, setSelected] = React.useState(1);
+  const { selected, onPressTab, setSelected} = useBottomNavigator();
   return (
-    <Box style={{ position: 'absolute', bottom: 0 }}  flex={1} bg="white" safeAreaTop width="100%" height={'100%'} alignSelf="center">
-      <View flex={1}>
-
-      </View>
-      <BottomTabNavigator/>
-    </Box>
+    <View flex={1} style={{ backgroundColor: 'white'}}>
+        <View flex={1} style={{ opacity: selected == 0 ? 1 : 0 }}>
+            <DashboardScreen />
+        </View>
+      <Box style={{ position: 'absolute', bottom: 0 }}  flex={1} bg="white"  width="100%"  alignSelf="center">
+        <BottomTabNavigator selected={selected} onPressTab={onPressTab} setSelected={setSelected} />
+      </Box>
+    </View>
   );
 };
 

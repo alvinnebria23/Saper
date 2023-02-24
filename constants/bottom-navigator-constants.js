@@ -15,4 +15,4 @@ export const BOTTOM_TAB_NAVIGATOR_OBJECT = [
         name:'account',
         iconName:'account',
     }
-]
+];
