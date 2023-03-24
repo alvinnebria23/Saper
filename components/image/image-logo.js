@@ -1,10 +1,10 @@
 import { Image } from "native-base";
 
-const ImageLogo = () => {
+const ImageLogo = ({ source = require('../../assets/sapers-logo-edited.png'), size = 'xl' }) => {
     return (
         <Image 
-            source={require('../../assets/sapers-logo-edited.png')}
-            size={'xl'}
+            source={source}
+            size={size}
             alt={'Sapers Logo'}
             mb={'10%'}
         />

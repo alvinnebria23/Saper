@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Text, Row, Column, Image, IconButton, Icon, FormControl  } from 'native-base';
+import React, { useContext, useEffect } from 'react';
+import { Button, Text, Row, Column, IconButton, Icon, FormControl  } from 'native-base';
 import { RoundedButton } from '../components/button';
 import { View } from 'react-native';
 import { LOGO_STYLES_VIEW, BOTTOM_VIEW, CENTER_SCREEN_VIEW, FORM_STYLES_VIEW  } from '../constants/view-component-styles.js';
@@ -7,13 +7,20 @@ import { LeftIconInput } from '../components/input';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { ImageLogo } from '../components/image';
+import { UserContext } from '../context';
 import useLogin from '../hooks/useLogin';
 import useCommon from '../hooks/useCommon';
-
 const LoginScreen = ({ navigation }) => {
-    const { onSubmit, onPressShowPassword, showPassword, accountFound } = useLogin();
+    const { userData, setUserData } = useContext(UserContext);
+    const { onSubmit, onPressShowPassword, showPassword, accountFound } = useLogin(setUserData);
     const { onPressNavigate } = useCommon();
     const { control, handleSubmit } = useForm();
+
+    useEffect(() => {
+        if(Object.keys(userData).length !== 0){
+            navigation.navigate('Home');
+        }
+    }, [])
 
   return (
     <View style={CENTER_SCREEN_VIEW}>
