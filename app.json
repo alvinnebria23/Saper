@@ -4,12 +4,12 @@
     "slug": "Saper",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/saper-logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/saper-splash-screen.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FF4E00"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,10 +21,11 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions":["READ_EXTERNAL_STORAGE"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      }      
     },
     "web": {
       "favicon": "./assets/favicon.png"
