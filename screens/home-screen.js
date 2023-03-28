@@ -15,7 +15,7 @@ const HomeScreen = ({ navigation }) => {
         <View flex={1} style={{ opacity: selected == 1 ? 1 : 0 }}>
             <ClickReportScreen />
         </View>
-      <Box style={{ position: 'absolute', bottom: 0 }}  flex={1} bg="white"  width="100%"  alignSelf="center">
+      <Box style={{ position: 'absolute', bottom: 0 }} width="100%" alignSelf="center">
         <BottomTabNavigator selected={selected} onPressTab={onPressTab} setSelected={setSelected} />
       </Box>
     </View>
