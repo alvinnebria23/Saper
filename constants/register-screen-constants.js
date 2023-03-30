@@ -5,13 +5,13 @@ export const INIT_ACCOUNT_INFORMATION_INPUTS = [
         iconName: 'email-outline',
     },
     {
-        name: 'fullname',
+        name: 'fullName',
         placeHolder: 'Full name',
         iconName: 'folder-account-outline',
     },
     {
         name: 'contactNumber',
-        placeHolder: 'Contact number',
+        placeHolder: 'Mobile number',
         iconName: 'cellphone',
     },
     {
@@ -62,9 +62,13 @@ export const CARD_CONTAINER = {
     alignItems: 'center', 
   }
  export const CARDVIEW_STYLE = {
-    height: 200,
+    height: '100%',
     width: '100%',
     backgroundColor: 'white',
     justifyContent: 'center', 
     alignItems: 'center', 
   };
+
+  export const STEP1 = 1;
+  export const STEP2 = 2;
+  export const STEP3 = 3;
