@@ -61,14 +61,21 @@ export const CARD_CONTAINER = {
     margin: 16,
     alignItems: 'center', 
   }
- export const CARDVIEW_STYLE = {
+export const CARDVIEW_STYLE = {
     height: '100%',
     width: '100%',
-    backgroundColor: 'white',
-    justifyContent: 'center', 
-    alignItems: 'center', 
   };
 
-  export const STEP1 = 1;
-  export const STEP2 = 2;
-  export const STEP3 = 3;
+export const REGISTRATION_SUCESS = {
+    header: 'Success',
+    body: 'You have successfully registered. Please login and input the verification code we sent to your email to complete your registration.',
+    isOpen: true,
+};
+export const REGISTRATION_FAILED = {
+    header: 'Error',
+    body:'Email has already been registered.',
+    isOpen: true,
+};
+export const STEP1 = 1;
+export const STEP2 = 2;
+export const STEP3 = 3;

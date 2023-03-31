@@ -1,34 +1,34 @@
 import React, { useRef, useState } from 'react';
-import { Text, Column, Icon, KeyboardAvoidingView, IconButton, Button, Heading, Center } from 'native-base';
+import { Text, Column, Icon, KeyboardAvoidingView, IconButton, Button, Heading, Center, Flex } from 'native-base';
 import { View } from 'react-native';
 import { LOGO_STYLES_VIEW  } from '../constants/view-component-styles.js';
 import { LeftIconInput } from '../components/input';
 import { ImageLogo } from '../components/image';
 import { useForm, Controller } from 'react-hook-form';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { INIT_ACCOUNT_INFORMATION_INPUTS, INIT_API_INPUTS, PROGRESS_STEPS_STYLE, PROGRESS_BUTTON_TEXT_STYLE, CARD_CONTAINER, CARDVIEW_STYLE, STEP1, STEP2 } from '../constants/register-screen-constants';
+import { INIT_ACCOUNT_INFORMATION_INPUTS, INIT_API_INPUTS, PROGRESS_STEPS_STYLE, PROGRESS_BUTTON_TEXT_STYLE, CARD_CONTAINER, CARDVIEW_STYLE, STEP1, STEP2, STEP3 } from '../constants/register-screen-constants';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-import { CardView } from '../components/card';
+import { DetailCard } from '../components/card';
 import { removeInvalidNameRegex, removeNonNumericRegex } from '../constants/regex.js';
 import { AlertDialogComponent } from '../components/dialog/index.js';
 import useRegister from '../hooks/useRegister.js';
 const RegisterScreen = ({ navigation }) => {
   const { control, handleSubmit, setValue } = useForm();
-  const { onPressNext, onPressClearButton, errorInputFields, isOpen, onCloseDialog, isConfirm } = useRegister({ setValue, navigation});
+  const { onPressNext, onPressClearButton, errorInputFields, status, onCloseDialog, isConfirm } = useRegister({ setValue, navigation});
   const cancelRef = useRef(null);
   return (
       <View style={{ flex: 1, marginTop: '40%' }}>
           <View style={LOGO_STYLES_VIEW}>
               <ImageLogo />
           </View>
-          {render({control, onPressNext, onPressClearButton, errorInputFields, isOpen, isConfirm })}
+          {render({control, onPressNext, onPressClearButton, errorInputFields, status, isConfirm })}
           <>
             <AlertDialogComponent 
               cancelRef={cancelRef}
-              isOpen={isOpen}
+              isOpen={status?.isOpen}
               onCloseDialog={onCloseDialog}
-              header={'Error message'}
-              body={'App Id and Secret Key does not match or invalid.'}
+              header={status?.header}
+              body={status?.body}
               footer={(
                 <Button colorScheme='orange' onPress={onCloseDialog}>
                     OK
@@ -40,23 +40,35 @@ const RegisterScreen = ({ navigation }) => {
   );
 };
 const renderAccountInformation = (formValues) => {
+  const accountInfoFields = [
+    { label: 'Email', value: formValues.email, iconName: 'email-outline' },
+    { label: 'Fullname', value: formValues.fullName, iconName: 'folder-account-outline' },
+    { label: 'Mobile number', value: formValues.contactNumber, iconName: 'cellphone' },
+    { label: 'Password', value: formValues.password, iconName: 'lock-outline' },
+  ];
+  
+  const apiInfoFields = [
+    { label: 'App Id', value: formValues.appId, iconName: 'application-edit-outline' },
+    { label: 'Secret Key', value: formValues.secretKey, iconName: 'key-outline' },
+  ];
   return (
     <>
-      <Heading size="md">Account Information</Heading>
-      <View flex={1} style={{ left: 0}}>
-      <Heading size="xs">Email</Heading> 
-      <Text>{`: ${formValues.email}`}</Text>
-        <Text>{`Full name: ${formValues.fullName}`}</Text>
-        <Text>{`Mobile number: ${formValues.contactNumber}`}</Text>
-        <Text>{`Password: ${formValues.password}`}</Text>
+      <Heading size="md" mb={2}>Account Information</Heading>
+      <View style={{ left: 0, marginBottom: 20 }}>
+        {accountInfoFields.map(({ label, value, iconName }) => (
+          <DetailCard key={label} label={label} value={value} iconName={iconName} />
+        ))}
       </View>
-      <Heading size="md">API</Heading>
-      <Text>{`App Id: ${formValues.appId}`}</Text>
-      <Text>{`Secret key: ${formValues.secretKey}`}</Text>
+      <Heading size="md" mb={2} mt={2}>API</Heading>
+      <View flex={1} style={{ left: 0 }}>
+        {apiInfoFields.map(({ label, value, iconName }) => (
+          <DetailCard key={label} label={label} value={value} iconName={iconName} />
+        ))}
+      </View>
     </>
-  )
+  );
 };
-const render = ({control, onPressNext, onPressClearButton, errorInputFields, isOpen, isConfirm }) => {
+const render = ({control, onPressNext, onPressClearButton, errorInputFields, status, isConfirm }) => {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ProgressSteps {...PROGRESS_STEPS_STYLE}>
@@ -127,7 +139,7 @@ const render = ({control, onPressNext, onPressClearButton, errorInputFields, isO
           </Column>
         </ProgressStep>
         <ProgressStep 
-          errors={errorInputFields.length > 0 || isOpen}
+          errors={errorInputFields.length > 0 || status?.isOpen}
           label="Open API" 
           nextBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE} 
           previousBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE}
@@ -188,11 +200,13 @@ const render = ({control, onPressNext, onPressClearButton, errorInputFields, isO
           label="Confirm Details" 
           nextBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE} 
           previousBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE}
+          onSubmit={onPressNext.bind(this, STEP3, control._formValues)}
+          previousBtnDisabled={status?.header?.toLowerCase().includes('success')}         
         >
           <View style={CARD_CONTAINER}>
-            <CardView style={CARDVIEW_STYLE}>
+            <View style={CARDVIEW_STYLE}>
               {isConfirm && renderAccountInformation(control._formValues)}
-            </CardView>      
+            </View>      
           </View>
         </ProgressStep>
     </ProgressSteps>
