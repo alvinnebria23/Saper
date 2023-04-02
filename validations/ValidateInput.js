@@ -1,5 +1,5 @@
 import { alphabetRegex, emailRegex, numericRegex, passwordValidationRegex, removeInvalidNameRegex, removeNonNumericRegex } from "../constants/regex";
-import { STEP1, STEP2 } from "../constants/register-screen-constants";
+import { APP_ID_ERROR_MESSAGE, CONFIRM_PASSWORD_NOT_MATCH_ERROR_MESSAGE, CONTACT_NUMBER_ERROR_MESSAGE, EMAIL_ERROR_MESSAGE, FULLNAME_ERROR_MESSAGE, PASSWORD_ERROR_MESSAGE, REQUIRED_PASSWORD_MESSAGE, SECRET_KEY_ERROR_MESSAGE, STEP1, STEP2 } from "../constants/register-screen-constants";
 
 const isValidEmail = (email) => {
     return emailRegex.test(email);
@@ -26,31 +26,25 @@ const validateInputObject = (stepNumber, formValues) => {
             return emptyInputFields;
         }
         if(!isValidEmail(email.trim())){
-            errorInputFields.push({ fieldName: 'email', errorMessage: 'Please input valid email.'});
+            errorInputFields.push(EMAIL_ERROR_MESSAGE);
         }
         if(!isAlphabetsOnly(fullName.trim())){
-            errorInputFields.push({ fieldName: 'fullName', errorMessage: 'Full name must consist of first and last name only.'});
+            errorInputFields.push(FULLNAME_ERROR_MESSAGE);
         }
         if(!isNumericOnly(contactNumber)){
-            errorInputFields.push({ fieldName: 'contactNumber', errorMessage: 'Mobile number must consist of numbers only.'});
+            errorInputFields.push(CONTACT_NUMBER_ERROR_MESSAGE);
         }
         if(password.includes(' ')){
-            errorInputFields.push({ fieldName: 'password', errorMessage: 'Password does not accept spaces.'});
+            errorInputFields.push(PASSWORD_ERROR_MESSAGE);
         }
         if(confirmPassword.includes(' ')){
-            errorInputFields.push({ fieldName: 'confirmPassword', errorMessage: 'Confirm password does not accept spaces.'});
+            errorInputFields.push(PASSWORD_ERROR_MESSAGE);
         }
         if(!validatePassword(password)){
-            errorInputFields.push({ 
-                fieldName: 'password', 
-                errorMessage: `Password must be:
-                - minimum of 7 characters
-                - maximum of 15 characters
-                - must be alphanumeric`,
-            });
+            errorInputFields.push(REQUIRED_PASSWORD_MESSAGE);
         }
         if(password !== confirmPassword){
-            errorInputFields.push({ fieldName: 'confirmPassword', errorMessage: 'Password and Confirm password does not match.'});
+            errorInputFields.push(CONFIRM_PASSWORD_NOT_MATCH_ERROR_MESSAGE);
         }
     }else if(stepNumber === STEP2){
         let { appId, secretKey } = formValues;
@@ -61,10 +55,10 @@ const validateInputObject = (stepNumber, formValues) => {
             return emptyInputFields;
         }
         if(appId.includes(' ')){
-            errorInputFields.push({ fieldName: 'appId', errorMessage: 'App ID does not accept spaces.'});
+            errorInputFields.push(APP_ID_ERROR_MESSAGE);
         }
         if(secretKey.includes(' ')){
-            errorInputFields.push({ fieldName: 'secretKey', errorMessage: 'Secret key does not accept spaces.'});
+            errorInputFields.push(SECRET_KEY_ERROR_MESSAGE);
         }
     }
     return errorInputFields;

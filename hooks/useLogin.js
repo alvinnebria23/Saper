@@ -1,25 +1,33 @@
 
 import React, { useState } from 'react';
 import loginScreenValidation from '../validations/login-screen-validation';
-import { setLocalStorage } from '../helpers/storageHelper';
+import { setLocalStorage } from '../helpers/storageHelper.js'
+import { loginUser } from '../api/UserApi';
 export default useLogin = (setUserData) => {
     const [showPassword, setShowPassword] = useState(false);
-    const [accountFound, setAccountFound] = useState(true);
+    const [status, setStatus] = useState({ isFound: false, message: '' });
+    const [isLoading, setIsLoading] = useState(false);
     const { validateInput } = loginScreenValidation();
 
-    const onSubmit = (navigation, data) => {
-        if(!validateInput(data['username'], data['password'])){
-            setAccountFound(false);
+    const onSubmit = async (navigation, data) => {
+        if(!validateInput(data['email'], data['password'])){
+            setStatus({ isFound: false, message: 'Invalid Email or Password.'})
             return;
         }
-        const value = {
-            username: data['username'],
+        setIsLoading(true);
+        const user = {
+            email: data['email'],
             password: data['password'],
         }
-        setUserData(value);
-        setLocalStorage('userData', value);
-        setAccountFound(true);
-        navigation.navigate('Home');
+        const response = await loginUser(user);
+        setStatus(response)
+        if(response?.isFound){
+            console.log(response.user);
+            setUserData(response.user);
+            setLocalStorage('userData', response.user);
+            navigation.navigate('Home')
+        }
+        setIsLoading(false);
     }
 
     const onPressShowPassword = () => {
@@ -30,6 +38,7 @@ export default useLogin = (setUserData) => {
         onSubmit,
         onPressShowPassword,
         showPassword,
-        accountFound,
+        isLoading,
+        status
     }
 }

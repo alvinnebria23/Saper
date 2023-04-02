@@ -1,49 +1,61 @@
-import React , { useEffect, useState } from "react";
-import { REGISTRATION_FAILED, REGISTRATION_SUCESS, STEP1, STEP2, STEP3 } from "../constants/register-screen-constants.js";
+import React , { useState } from "react";
+import { EMAIL_ALREADY_TAKEN_MESSAGE, REGISTRATION_FAILED, REGISTRATION_SUCESS, STEP1, STEP2, STEP3 } from "../constants/register-screen-constants.js";
 import { validateInputObject } from "../validations/ValidateInput.js";
 import { checkApi } from "../api/ShopeeApi.js";
-import { registerUser } from "../api/UserApi.js";
+import { registerUser, checkEmail } from "../api/UserApi.js";
 export default useRegister = ({ setValue, navigation }) => {
     const [errorInputFields, setErrorInputFields] = useState([]);
     const [isConfirm, setIsConfirm] = useState(false);
     const [status, setStatus] = useState({});
+    const [spinnerObject, setSpinnerObject] = useState({ isLoading: false, message: '' });
     const onPressNext = async (stepNumber, formValues) => {
         if(stepNumber === STEP1){
             const { email, fullName, contactNumber, password, confirmPassword } = formValues;
             const errorFields = validateInputObject(STEP1, { email, fullName, contactNumber, password, confirmPassword });
+            if(!errorFields.length){
+                setSpinnerObject({ isLoading: true, message: 'Checking Email Address . . .' });
+                const response = await checkEmail(email);
+                if(response?.isTaken){
+                    errorFields.push(EMAIL_ALREADY_TAKEN_MESSAGE);
+                }
+                setSpinnerObject({ isLoading: false, message: '' });
+            }
             setErrorInputFields(errorFields);
         }
         if(stepNumber === STEP2){
             const { appId, secretKey } = formValues;
             const errorFields = validateInputObject(STEP2, { appId, secretKey });
             if(errorFields.length === 0){
+                setSpinnerObject({ isLoading: true, message: 'Verifying API Credentials. . .' });
                 const response = await checkApi(appId, secretKey);
-                if(!response.success){
+                if(!response?.success){
                     const status = {
                         header: 'Error message',
-                        body: response.message,
+                        body: response?.message,
                         isOpen: true,
                     };
                     setStatus(status);
                 }else{
                     setIsConfirm(true);
                 }
+                setSpinnerObject({ isLoading: false, message: '' });
             }
             setErrorInputFields(errorFields);
         }
         if(stepNumber === STEP3){
             const { email, fullName, contactNumber, password, appId, secretKey } = formValues;
+            setSpinnerObject({ isLoading: true, message: 'Saving Account Information . . .' });
             const user = await registerUser({ email, fullName, contactNumber, password, appId, secretKey });
-            if(user.isValidEmail){
-                setStatus(REGISTRATION_FAILED);
-            }else{
+            if(user){
                 setStatus(REGISTRATION_SUCESS);
+            }else{
+                setStatus(REGISTRATION_FAILED);
             }
-            
+            setSpinnerObject({ isLoading: false, message: '' });
         }
     };
-    const onPressPrevious = (stepNumber) => {
-        
+    const onPressBack = () => {
+        navigation.navigate('Login');
     };
     const onPressClearButton = (fieldName) => {
         setValue(fieldName, '');
@@ -61,9 +73,10 @@ export default useRegister = ({ setValue, navigation }) => {
         onPressNext,
         errorInputFields,
         onPressClearButton,
-        onPressPrevious,
+        onPressBack,
         status,
         onCloseDialog,
-        isConfirm
+        isConfirm,
+        spinnerObject,
     };
 };

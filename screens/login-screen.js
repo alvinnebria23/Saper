@@ -4,7 +4,7 @@ import { RoundedButton } from '../components/button';
 import { View } from 'react-native';
 import { LOGO_STYLES_VIEW, BOTTOM_VIEW, CENTER_SCREEN_VIEW, FORM_STYLES_VIEW  } from '../constants/view-component-styles.js';
 import { LeftIconInput } from '../components/input';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { ImageLogo } from '../components/image';
 import { UserContext } from '../context';
@@ -12,7 +12,7 @@ import useLogin from '../hooks/useLogin';
 import useCommon from '../hooks/useCommon';
 const LoginScreen = ({ navigation }) => {
     const { userData, setUserData } = useContext(UserContext);
-    const { onSubmit, onPressShowPassword, showPassword, accountFound } = useLogin(setUserData);
+    const { onSubmit, onPressShowPassword, showPassword, isLoading , status} = useLogin(setUserData);
     const { onPressNavigate } = useCommon();
     const { control, handleSubmit } = useForm();
 
@@ -28,17 +28,17 @@ const LoginScreen = ({ navigation }) => {
             <ImageLogo />
         </View>
         <View style={FORM_STYLES_VIEW}>
-            <FormControl isInvalid={!accountFound}>
+            <FormControl isInvalid={!status?.isFound}>
                 <Column space={2} alignItems="center">
                     <Controller
-                        name='username'
+                        name='email'
                         control={control}
                         render={({ field : { onChange, value }}) => (
                             <LeftIconInput 
-                                placeholder={'Username'}
+                                placeholder={'Email'}
                                 onChange={onChange}
                                 value={value}
-                                inputLeftElement={<Icon size={4} ml={4} color={'#FF4E00'} as={<Ionicons  name={'person'} />} />}
+                                inputLeftElement={<Icon size={4} ml={4} color={'#FF4E00'} as={<MaterialCommunityIcons  name={'email'} />} />}
                             />
                         )}
                     />
@@ -80,11 +80,15 @@ const LoginScreen = ({ navigation }) => {
                         )}
                     />
                     <FormControl.ErrorMessage>
-                        Invalid username or password
+                        {status?.message}
                     </FormControl.ErrorMessage>
                 </Column>
             </FormControl>
-            <RoundedButton text={'Log in'} onPress={handleSubmit(onSubmit.bind(this, navigation))} />
+            <RoundedButton 
+                text={'Log in'} 
+                onPress={handleSubmit(onSubmit.bind(this, navigation))} 
+                isLoading={isLoading}
+            />
         </View>
         <View style={BOTTOM_VIEW}>
             <Row alignItems={'center'}>

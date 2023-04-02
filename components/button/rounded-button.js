@@ -1,7 +1,11 @@
 import { Button, Text } from 'native-base';
 
-const RoundedButton = ({ text, onPress }) => {
-
+const RoundedButton = ({ 
+    text, 
+    onPress, 
+    isLoading = false, 
+    isLoadingText = ''
+}) => {
     return (
         <Button 
             bg={'primary.50'} 
@@ -11,6 +15,8 @@ const RoundedButton = ({ text, onPress }) => {
             variant={'rounded'} 
             shadow={4}
             onPress={onPress}
+            isLoading={isLoading}
+            isLoadingText={isLoadingText}
         >
             <Text style={{ color: 'white', fontWeight: "bold" }}>{text}</Text>
         </Button>
