@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
-import { Text, Column, Icon, KeyboardAvoidingView, IconButton, Button, Heading, Center, Flex } from 'native-base';
-import { View } from 'react-native';
+import React, { useRef } from 'react';
+import { Column, Icon, KeyboardAvoidingView, IconButton, Button, Heading, Text } from 'native-base';
+import { TouchableOpacity, View } from 'react-native';
 import { LOGO_STYLES_VIEW  } from '../constants/view-component-styles.js';
 import { LeftIconInput } from '../components/input';
 import { ImageLogo } from '../components/image';
@@ -11,17 +11,24 @@ import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { DetailCard } from '../components/card';
 import { removeInvalidNameRegex, removeNonNumericRegex } from '../constants/regex.js';
 import { AlertDialogComponent } from '../components/dialog/index.js';
+import { CustomModalSpinner } from '../components/spinner/index.js';
 import useRegister from '../hooks/useRegister.js';
 const RegisterScreen = ({ navigation }) => {
-  const { control, handleSubmit, setValue } = useForm();
-  const { onPressNext, onPressClearButton, errorInputFields, status, onCloseDialog, isConfirm } = useRegister({ setValue, navigation});
+  const { control, setValue } = useForm();
+  const { onPressNext, onPressClearButton, errorInputFields, status, onCloseDialog, isConfirm, spinnerObject, onPressBack } = useRegister({ setValue, navigation});
   const cancelRef = useRef(null);
   return (
-      <View style={{ flex: 1, marginTop: '40%' }}>
+      <View style={{ flex: 1, marginTop: '13%' }}>
+          <View>
+            <TouchableOpacity onPress={onPressBack}>
+            <Icon size={7} ml={4} color={'#FF4E00'} as={<MaterialCommunityIcons  name={'arrow-left'} />} />
+            </TouchableOpacity>
+          </View>
           <View style={LOGO_STYLES_VIEW}>
               <ImageLogo />
           </View>
-          {render({control, onPressNext, onPressClearButton, errorInputFields, status, isConfirm })}
+          {spinnerObject.isLoading && <CustomModalSpinner message={spinnerObject.message}/>}
+          {render({control, onPressNext, onPressClearButton, errorInputFields, status, isConfirm, spinnerObject })}
           <>
             <AlertDialogComponent 
               cancelRef={cancelRef}
@@ -41,7 +48,7 @@ const RegisterScreen = ({ navigation }) => {
 };
 const renderAccountInformation = (formValues) => {
   const accountInfoFields = [
-    { label: 'Email', value: formValues.email, iconName: 'email-outline' },
+    { label: 'Email', value: formValues.email, iconName: 'email' },
     { label: 'Fullname', value: formValues.fullName, iconName: 'folder-account-outline' },
     { label: 'Mobile number', value: formValues.contactNumber, iconName: 'cellphone' },
     { label: 'Password', value: formValues.password, iconName: 'lock-outline' },
@@ -68,7 +75,7 @@ const renderAccountInformation = (formValues) => {
     </>
   );
 };
-const render = ({control, onPressNext, onPressClearButton, errorInputFields, status, isConfirm }) => {
+const render = ({control, onPressNext, onPressClearButton, errorInputFields, status, isConfirm, spinnerObject }) => {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ProgressSteps {...PROGRESS_STEPS_STYLE}>
@@ -78,6 +85,7 @@ const render = ({control, onPressNext, onPressClearButton, errorInputFields, sta
           label="Account Information"  
           nextBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE}
           onNext={onPressNext.bind(this, STEP1, control._formValues)}
+          nextBtnDisabled={spinnerObject?.isLoading}
         >
           <Column space={2} paddingRight={'20%'} paddingLeft={'20%'} paddingBottom={'20%'}>
             {INIT_ACCOUNT_INFORMATION_INPUTS.map((item) => {
@@ -144,6 +152,7 @@ const render = ({control, onPressNext, onPressClearButton, errorInputFields, sta
           nextBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE} 
           previousBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE}
           onNext={onPressNext.bind(this, STEP2, control._formValues)}
+          nextBtnDisabled={spinnerObject?.isLoading}
         >
           <Column space={2} paddingRight={'20%'} paddingLeft={'20%'} paddingBottom={'20%'}>
               {INIT_API_INPUTS.map(item => {
@@ -201,7 +210,8 @@ const render = ({control, onPressNext, onPressClearButton, errorInputFields, sta
           nextBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE} 
           previousBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE}
           onSubmit={onPressNext.bind(this, STEP3, control._formValues)}
-          previousBtnDisabled={status?.header?.toLowerCase().includes('success')}         
+          previousBtnDisabled={status?.header?.toLowerCase().includes('success')}     
+          nextBtnDisabled={spinnerObject?.isLoading}   
         >
           <View style={CARD_CONTAINER}>
             <View style={CARDVIEW_STYLE}>

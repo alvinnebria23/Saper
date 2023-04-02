@@ -11,7 +11,7 @@ const SpinnerScreen = ({ navigation }) => {
             }else{
                 navigation.navigate('Login');
             }
-        }, 2000); 
+        }, 1000); 
       }, []);
       
   return (

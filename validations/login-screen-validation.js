@@ -1,6 +1,6 @@
 export default LoginScreenValidation = () => {
-    const validateInput = (username, password) => {
-        return username && password
+    const validateInput = (email, password) => {
+        return email && password
     }
 
     return {
