@@ -9,8 +9,8 @@ const setLocalStorage = async (key, value) => {
 };
 const retrieveLocalStorage = async (key) => {
     try {
-        const jsonValue  = await AsyncStorage.getItem(key);
-        return jsonValue || {};
+        const jsonValue  = JSON.parse(await AsyncStorage.getItem(key));
+        return await jsonValue || {};
     } catch (error) {
         console.log(error);
     }

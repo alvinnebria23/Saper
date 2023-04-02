@@ -31,30 +31,32 @@ const BottomTabNavigator = ({ navigation, onPressTab, selected }) => {
   };
 
   return (
-    <HStack bg="primary.50" alignItems="center" safeAreaBottom>
+    <HStack bg="white" alignItems="center" safeAreaBottom style= {{ elevation: 24 }}>
       {BOTTOM_TAB_NAVIGATOR_OBJECT.map((item, index) => (
         <View key={item['name']} style={{ flex: 1 }}>
           <TouchableOpacity
             onPress={() => onPressTab(index)}
             style={{
-              backgroundColor: selected === index ? 'white' : '#FF4E00',
+              backgroundColor: 'white',
               flex: 1,
-              height: buttonHeight
+              height: buttonHeight,
             }}
             onPressIn={() => fadeIn(index)}
             onPressOut={() => fadeOut(index)}
             extraButtonProps={{
-              rippleColor: '#FF4E00',
+              rippleColor: 'white',
             }}
           >
           <Animated.View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', transform: [{ scale: selectedTab === index ? 1.2 : 1 }] }}>
-              <Icon mb="1" as={<MaterialCommunityIcons name={item['iconName']} />} color={selected === index ? '#FF4E00' : 'white'} size={selected === index ? 'xl'  : 'md'}/>
-
-            {selected !== index && (
-              <Text color='white' fontSize="12">
-                {capitalizeFirstLetter(item['name'])}
-              </Text>
-            )}
+              <Icon mb="1" as={
+                <MaterialCommunityIcons 
+                  name={selected === index ? item['selectedIconName'] : item['iconName']} />} 
+                  color={selected === index ? '#FF4E00' : 'gray.300'} 
+                  size={selected === index ? 'xl'  : 'md'}
+                />
+                <Text fontWeight={selected === index ? 'extrabold' : 'normal'} color={selected === index ? '#FF4E00' : 'gray.300'} fontSize="12">
+                  {capitalizeFirstLetter(item['name'])}
+                </Text>
           </Animated.View>
           </TouchableOpacity>
         </View>

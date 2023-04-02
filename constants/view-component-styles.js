@@ -5,6 +5,7 @@ export const CENTER_SCREEN_VIEW = {
 
 export const LOGO_STYLES_VIEW = {
     alignItems: 'center',
+    marginTop: '20%' 
 }
 
 export const FORM_STYLES_VIEW = {
