@@ -1,17 +1,18 @@
 import React  from 'react';
-import {  Box, Text, Icon, HStack, Center, Heading } from 'native-base';
-import { View, FlatList } from 'react-native';
+import {  Box, Text, Icon, HStack, Center, Heading, VStack, Divider } from 'native-base';
+import { View, FlatList, ScrollView } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DashboardCardView } from '../components/card';
 import { RangeDatePickerModal } from '../components/modal';
+import { EMPTY_DASHBOARD_VALUE } from '../constants/dashboard-constants';
 import useDashboard from '../hooks/useDashboard';
-const DashboardScreen = ({ navigation, dashboardFilterDate, setDashboardFilterDate, dashboardData }) => {
+const DashboardScreen = ({ navigation, dashboardFilterDate, setDashboardFilterDate, dashboardData, isLoading, topFiveSubIds }) => {
     const { showDatePicker, setShowDatePicker, onRequestClose, onSelectDateRange }= useDashboard(setDashboardFilterDate);
     const keyExtractor = (item) => item.id;
     const renderItem = ({item}) => {
         return (
-            <DashboardCardView key={item.id} name={item.name} value={item.value} />
+            <DashboardCardView key={item.id} name={item.name} value={item.value} isLoading={isLoading} />
         )
     };
     const renderDatePicker = () => {
@@ -23,13 +24,29 @@ const DashboardScreen = ({ navigation, dashboardFilterDate, setDashboardFilterDa
             />
         )
     };
+    const renderSubIds = () => {
+        return (
+            <VStack>
+              <Center mt={'2'} mb={'2'}>
+                <Text fontWeight={'bold'} color={'black'} mb={2}> Top 5 Sub-ID {'(Commission)'}</Text>
+                <Divider/>
+              </Center>
+                {topFiveSubIds.map((item, index) => (
+                    <HStack>
+                            <Text flex={1} key={Math.random()}>{`${index + 1}. ${item.subId}`}</Text>
+                            <Text style={{ right: 0 , position: 'absolute', marginRight: '4%'}} flex={1} key={Math.random()}>{`P ${item.totalCommission}`}</Text>
+                    </HStack>
+                ))}
+            </VStack>
+          );
+    };
     return (
         <View bg="white" width="100%" height={'100%'}>
             {renderDatePicker()}
-            <View>
+            <View >
                 <Heading ml='5%' mt='25%' mb={'4%'} size='md' color={'primary.50'}>Welcome to SAPERS!</Heading>
             </View>
-            <View style={{ marginLeft: '4%' , marginRight: '4%' }}>
+            <View style={{ marginLeft: '4%' , marginRight: '4%', flex: 2 }}>
                 <TouchableOpacity onPress={() => setShowDatePicker(true)}>
                     <Box bg="#f6f7f9" pt='1' pb='1' pr='2' pl='2' h={'auto'} borderColor='black' borderWidth={'0.5'}>
                         <HStack mb={'0.5'} mt={'0.5'}>
@@ -39,23 +56,20 @@ const DashboardScreen = ({ navigation, dashboardFilterDate, setDashboardFilterDa
                         </HStack>
                     </Box>
                 </TouchableOpacity>
-                {dashboardData &&  
-                    <FlatList
-                        contentContainerStyle={{ paddingTop: '5%' , marginBottom: '10%' }}
-                        data={dashboardData}
-                        renderItem={renderItem}
-                        keyExtractor={keyExtractor}
-                        numColumns={2}
-                    />}
-                <TouchableOpacity>
-                    <Box bg={'#f6f7f9'} pt='1' pb='1' pr='2' pl='2' h={'auto'}>
-                        <HStack mb={'0.5'} mt={'0.5'}>
-                            <Center mt={'2'} mb={'2'}>
-                                <Text color={'black'}>View Top 5 Sub-ID {'(Commision)'}</Text>
-                            </Center>
-                        </HStack>
-                    </Box>
-                </TouchableOpacity>
+                <FlatList
+                    contentContainerStyle={{ paddingTop: '5%' , marginBottom: '2%' }}
+                    data={isLoading ? EMPTY_DASHBOARD_VALUE : dashboardData}
+                    renderItem={renderItem}
+                    keyExtractor={keyExtractor}
+                    numColumns={2}
+                    scrollEnabled={true}
+                    style={{ height: '53%'}}
+                />
+            </View>
+            <View style={{ flex: 1, marginLeft: '4%' , marginRight: '4%'}}>
+                <Box bg={'#f6f7f9'} pr='2' pl='2' h={'auto'}>
+                    {!isLoading && renderSubIds()}
+                </Box>
             </View>
         </View>
     );

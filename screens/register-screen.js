@@ -15,7 +15,15 @@ import { CustomModalSpinner } from '../components/spinner/index.js';
 import useRegister from '../hooks/useRegister.js';
 const RegisterScreen = ({ navigation }) => {
   const { control, setValue } = useForm();
-  const { onPressNext, onPressClearButton, errorInputFields, status, onCloseDialog, isConfirm, spinnerObject, onPressBack } = useRegister({ setValue, navigation});
+  const { 
+    onPressNext, 
+    onPressClearButton, 
+    errorInputFields, 
+    status, onCloseDialog, 
+    isConfirm, 
+    spinnerObject, 
+    onPressBack 
+  } = useRegister({ setValue, navigation});
   const cancelRef = useRef(null);
   return (
       <View style={{ flex: 1, marginTop: '13%' }}>

@@ -26,9 +26,12 @@ const getConversionReport = async (filter) => {
             if(errorCode === 11001){
                 return { error: true, message: "Please do filtering dates every 30 seconds only."};
             }
-            return { error: true, message: "Invalid request. Please check your App Id and Secret Key."};
+            if(errorCode === 10020){
+                return { error: true, message: "Your secret key is already expired. Please regenerate your secret key and update your information on the app."};
+            }
+            return { error: true, message: "Invalid request. Please check your App Id and Secret Key ."};
         }
-        return response.data.data.conversionReport.nodes
+        return response.data;
     } catch (error) {
         console.log(error);
         return false;

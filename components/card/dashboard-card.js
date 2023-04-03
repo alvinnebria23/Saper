@@ -1,12 +1,15 @@
-import { Column, Heading, Text } from 'native-base';
+import { Column, Heading, Text, Skeleton } from 'native-base';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-const DashboardCardView = ({name, value, style }) => {
+const DashboardCardView = ({name, value, isLoading, style }) => {
   return (
     <View style={{ ...styles.card, ...style }}>
         <Column>
             <Text fontSize={'xs'} color={'black'}>{name}</Text>
-            <Heading size='lg' color={'black'}>{value}</Heading>
+            {isLoading ? 
+              <Skeleton size={8} w={'100%'} rounded="md" startColor={'gray.300'}/> :
+              <Heading size='lg' color={'black'}>{value}</Heading>
+            }
         </Column>
     </View>
   );
