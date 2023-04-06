@@ -1,3 +1,3 @@
 import RoundedButton from "./rounded-button";
-
-export { RoundedButton };
+import LinkButton from "./LinkButton";
+export { RoundedButton, LinkButton };

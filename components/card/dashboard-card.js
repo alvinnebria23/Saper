@@ -1,33 +1,19 @@
-import { Column, Heading, Text, Skeleton } from 'native-base';
+import { Column, Heading, Text, Skeleton, Row } from 'native-base';
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-const DashboardCardView = ({name, value, isLoading, style }) => {
+const DashboardCardView = ({ type, name, value, isLoading }) => {
   return (
-    <View style={{ ...styles.card, ...style }}>
-        <Column>
-            <Text fontSize={'xs'} color={'black'}>{name}</Text>
-            {isLoading ? 
-              <Skeleton size={8} w={'100%'} rounded="md" startColor={'gray.300'}/> :
-              <Heading size='lg' color={'black'}>{value}</Heading>
-            }
-        </Column>
-    </View>
+      <Column>
+          <Text fontSize={'xs'} color={'black'}>{name}</Text>
+          {isLoading ? 
+            <Skeleton size={8} w={'100%'} rounded="md" startColor={'gray.300'}/> :
+            (
+              <Row>
+                {type === 'amount' && <Text style={{fontSize: 12, lineHeight: 18, color: '#FF4E00'}}>&#8369;</Text>}
+                <Heading size='lg' color={'black'}>{`${value}`}</Heading>
+              </Row>
+            )
+          }
+      </Column>
   );
 };
-const styles = StyleSheet.create({
-  card: {
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 0.26,
-    elevation: 8,
-    borderColor: 'gray',
-    borderRadius: 10,
-    elevation: 2,
-    backgroundColor: '#f6f7f9',
-    padding: 20,
-    margin: '1%',
-    flex: 2,
-  }
-});
 export default DashboardCardView;

@@ -2,16 +2,21 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Flex, Center, Icon, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-const DetailCard = ({ iconName, label, value, style }) => {
+import { BorderlessInput } from '../input';
+const DetailCard = ({ iconName, label, value, style, withIcon = true, fontSize = "sm", isEditing = false }) => {
   return (
     <Flex direction="row" mt="1" style={{ ...styles.card, ...style }}>
-        <Center size="10">
-          <Icon size={6} mb={4} color={'#FF4E00'} as={<MaterialCommunityIcons  name={iconName} />} />
-        </Center>
+        {withIcon && 
+          <Center size="10">
+            <Icon size={6} mb={4} color={'#FF4E00'} as={<MaterialCommunityIcons  name={iconName} />} />
+          </Center>}
         <Center >
-          <Flex direction='column'>
+          <Flex pl={withIcon ? 0 : 5} pr={withIcon ? 0 : 5} direction='column'>
             <Text color={'gray.400'} fontSize="xs" >{label}</Text>
-            <Text>{value}</Text>
+            {isEditing ? 
+              <BorderlessInput label={label} value={value}/> :
+              <Text pt={1.5} pb={1.6} fontSize={fontSize} >{value}</Text>
+            }
           </Flex>
         </Center>
     </Flex>

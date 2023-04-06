@@ -1,3 +1,3 @@
 import LeftIconInput from "./left-icon-input";
-
-export { LeftIconInput };
+import BorderlessInput from "./borderless-input";
+export { LeftIconInput, BorderlessInput };

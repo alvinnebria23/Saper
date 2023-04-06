@@ -9,10 +9,13 @@ const setLocalStorage = async (key, value) => {
 };
 const retrieveLocalStorage = async (key) => {
     try {
-        const jsonValue  = JSON.parse(await AsyncStorage.getItem(key));
-        return await jsonValue || {};
+        const jsonValue = await AsyncStorage.getItem(key);
+        if(!jsonValue){
+            return {};
+        }
+        return await JSON.parse(jsonValue);
     } catch (error) {
-        console.log(error);
+        return;
     }
 };
 const clearLocalStorage = async () => {

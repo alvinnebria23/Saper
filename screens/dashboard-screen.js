@@ -1,18 +1,20 @@
 import React  from 'react';
 import {  Box, Text, Icon, HStack, Center, Heading, VStack, Divider } from 'native-base';
-import { View, FlatList, ScrollView } from 'react-native';
+import { View, FlatList, ScrollView, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DashboardCardView } from '../components/card';
 import { RangeDatePickerModal } from '../components/modal';
-import { EMPTY_DASHBOARD_VALUE } from '../constants/dashboard-constants';
+import { DASHBOARD_CARD_STYLE, EMPTY_DASHBOARD_VALUE } from '../constants/dashboard-constants';
 import useDashboard from '../hooks/useDashboard';
 const DashboardScreen = ({ navigation, dashboardFilterDate, setDashboardFilterDate, dashboardData, isLoading, topFiveSubIds }) => {
     const { showDatePicker, setShowDatePicker, onRequestClose, onSelectDateRange }= useDashboard(setDashboardFilterDate);
     const keyExtractor = (item) => item.id;
     const renderItem = ({item}) => {
         return (
-            <DashboardCardView key={item.id} name={item.name} value={item.value} isLoading={isLoading} />
+            <View key={item.id} style={{...DASHBOARD_CARD_STYLE.card}}>
+                <DashboardCardView type={item.type} name={item.name} value={item.value} isLoading={isLoading} />
+            </View>
         )
     };
     const renderDatePicker = () => {
@@ -32,9 +34,9 @@ const DashboardScreen = ({ navigation, dashboardFilterDate, setDashboardFilterDa
                 <Divider/>
               </Center>
                 {topFiveSubIds.map((item, index) => (
-                    <HStack>
+                    <HStack key={index}>
                             <Text flex={1} key={Math.random()}>{`${index + 1}. ${item.subId}`}</Text>
-                            <Text style={{ right: 0 , position: 'absolute', marginRight: '4%'}} flex={1} key={Math.random()}>{`P ${item.totalCommission}`}</Text>
+                            <Text style={{ right: 0 , position: 'absolute', marginRight: '4%'}} flex={1} key={Math.random()}>&#8369;{` ${item.totalCommission}`}</Text>
                     </HStack>
                 ))}
             </VStack>
@@ -74,5 +76,7 @@ const DashboardScreen = ({ navigation, dashboardFilterDate, setDashboardFilterDa
         </View>
     );
 };
+
+
 
 export default DashboardScreen;

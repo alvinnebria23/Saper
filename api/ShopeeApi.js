@@ -34,7 +34,7 @@ const getConversionReport = async (filter) => {
         return response.data;
     } catch (error) {
         console.log(error);
-        return false;
+        return { error: true, message: "Please do filtering dates every 30 seconds only."};
     }
 }
 

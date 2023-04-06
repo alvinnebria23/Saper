@@ -1,6 +1,6 @@
 export const CENTER_SCREEN_VIEW = {
     flex: 1,
-    marginTop: '40%',
+    marginTop: '10%',
 };
 
 export const LOGO_STYLES_VIEW = {

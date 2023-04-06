@@ -22,7 +22,6 @@ export default useLogin = (setUserData) => {
         const response = await loginUser(user);
         setStatus(response)
         if(response?.isFound){
-            console.log(response.user);
             setUserData(response.user);
             setLocalStorage('userData', response.user);
             navigation.navigate('Home')

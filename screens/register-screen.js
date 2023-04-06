@@ -156,7 +156,7 @@ const render = ({control, onPressNext, onPressClearButton, errorInputFields, sta
         </ProgressStep>
         <ProgressStep 
           errors={errorInputFields.length > 0 || status?.isOpen}
-          label="Open API" 
+          label="Affiliate API" 
           nextBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE} 
           previousBtnTextStyle={PROGRESS_BUTTON_TEXT_STYLE}
           onNext={onPressNext.bind(this, STEP2, control._formValues)}

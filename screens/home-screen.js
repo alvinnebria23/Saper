@@ -9,21 +9,26 @@ import { AlertDialogComponent } from '../components/dialog/index.js';
 import { CustomModalSpinner } from '../components/spinner/index.js';
 import useHome from '../hooks/useHome.js';
 import { useRef } from 'react';
+import AccountScreen from './account-screen';
 const HomeScreen = ({ navigation }) => {
   const { selected, onPressTab, setSelected} = useBottomNavigator(navigation);
   const { onCloseDialog, status, dashboardData, dashboardFilterDate, setDashboardFilterDate, isLoading, topFiveSubIds } = useHome();
   const renderSelectedScreen = () => {
     switch(selected){
       case 0:
-        return (<DashboardScreen 
-                    dashboardData={dashboardData} 
-                    dashboardFilterDate={dashboardFilterDate} 
-                    setDashboardFilterDate={setDashboardFilterDate} 
-                    isLoading={isLoading}
-                    topFiveSubIds={topFiveSubIds}
-                />);
+        return (
+          <DashboardScreen 
+            dashboardData={dashboardData} 
+            dashboardFilterDate={dashboardFilterDate} 
+            setDashboardFilterDate={setDashboardFilterDate} 
+            isLoading={isLoading}
+            topFiveSubIds={topFiveSubIds}
+          />
+        );
       case 1:
         return (<ClickReportScreen />);
+      case 3:
+        return (<AccountScreen navigation={navigation} />);
       default:
         return;
     }
