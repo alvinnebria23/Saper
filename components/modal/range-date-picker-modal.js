@@ -2,11 +2,13 @@ import { Modal, View, StyleSheet } from "react-native";
 import { DASHBOARD_DATE_BUTTONS } from "../../constants/dashboard-constants";
 import DateRangePicker from "rn-select-date-range";
 import moment from "moment";
-import { Button, FlatList, Row } from "native-base";
+import { Button, FlatList, Heading, Text, Row } from "native-base";
+import { formatDateToString } from "../../util/DateUtil";
 const RangeDatePickerModal = ({
     showDatePicker,
     onRequestClose,
     onSelectDateRange,
+    dateRange,
 }) => {
 
     const keyExtractor = (item) => item.id;
@@ -44,7 +46,16 @@ const RangeDatePickerModal = ({
                         keyExtractor={keyExtractor}
                         numColumns={2}
                         scrollEnabled={true}
+                        style={{ marginBottom: 15 }}
                     />
+                    <Row>
+                        <Text fontWeight={'bold'}>Start Date:&nbsp;</Text>
+                        {dateRange?.startDate && <Text>{formatDateToString(new Date(dateRange?.startDate),  '12:00 AM')}</Text>}
+                    </Row>
+                    <Row>
+                        <Text fontWeight={'bold'}>End Date:&nbsp;</Text>
+                        {dateRange?.endDate && <Text>{formatDateToString(new Date(dateRange?.endDate), '11:59 PM')}</Text>}
+                    </Row>
                     <View style={{ marginTop: 10,}}>
                         <DateRangePicker
                             onSelectDateRange={onSelectDateRange}
@@ -70,7 +81,7 @@ const styles = StyleSheet.create({
         marginLeft: '5%', 
         marginRight: '5%', 
         marginBottom: '50%', 
-        marginTop: '25%', 
+        marginTop: '20%', 
         padding: '5%', 
         backgroundColor: 'white'
     },

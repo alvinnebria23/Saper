@@ -1,66 +1,42 @@
 
 import React, { useState } from 'react';
-import { NINETY_DAYS_AGO, SEVEN_DAYS_AGO, THIRTY_DAYS_AGO, YESTERDAY } from '../constants/dashboard-constants';
 import { 
-    formatDateToString, 
-    getYesterdayDateRange, 
-    getSevenDaysAgoDate, 
-    getThiryDaysAgoDate, 
-    getNinetyDaysAgoDate, 
-    getLocalCurrentDate,
+    formatDateToString,
     formatDateToUnixTimestamp,
     getDateToday,
+    getPastDate,
 } from '../util/DateUtil.js';
+import { YESTERDAY } from '../constants/dashboard-constants.js';
 export default useDashboard = (setDashboardFilterDate) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [dateFilter, setDateFilter] = useState({});
-    const [updated, setUpdated] = useState(false);
     const onRequestClose = ({ action, value }) => {
         let startDate;
         let endDate;
-        if(!updated){
-            setShowDatePicker(false);
-            return;
-        }
         if(action === 'button'){
+            startDate = getPastDate(value);
+            endDate = getDateToday();
             if(value === YESTERDAY){
-                const { yesterdayStart, yesterdayEnd } = getYesterdayDateRange();
-                startDate = yesterdayStart;
-                endDate = yesterdayEnd;
-            }
-            if(value === SEVEN_DAYS_AGO){
-                startDate = getSevenDaysAgoDate();
-                endDate = getDateToday();
-            }
-            if(value === THIRTY_DAYS_AGO){
-                startDate = getThiryDaysAgoDate();
-                endDate = getDateToday();
-            }
-            if(value === NINETY_DAYS_AGO){
-                startDate = getNinetyDaysAgoDate();
-                endDate = getDateToday();
+                endDate.setDate(endDate.getDate() - 1);
             }
         }else{
-            if(dateFilter.startDate && dateFilter.endDate){
-                startDate = new Date(dateFilter.startDate);
-                endDate = new Date(dateFilter.endDate);
-                endDate.setHours(12);
-                endDate.setMinutes(59);
-                endDate.setSeconds(59);
-            }else{
+            if(!dateFilter.startDate && !dateFilter.endDate){
                 setShowDatePicker(false);
                 return;
             }
+            startDate = new Date(dateFilter.startDate);
+            endDate = new Date(dateFilter.endDate);
         }
-        const startDateText = formatDateToString(startDate);
-        const endDateText = formatDateToString(endDate);
+        const startDateText = formatDateToString(startDate, '12:00 AM');
+        startDate.setDate(startDate.getDate() - 1);
+        startDate.setHours(16, 0, 0, 0);
+        const endDateText = formatDateToString(endDate, '11:59 PM');
+        endDate.setHours(15, 59, 59);
         setDashboardFilterDate({ startDate: { text: startDateText , unixtimestamp: formatDateToUnixTimestamp(startDate) }, endDate: { text: endDateText, unixtimestamp: formatDateToUnixTimestamp(endDate) }});
-        setUpdated(false);
         setShowDatePicker(false);
     }
 
     const onSelectDateRange = (range) => {
-        setUpdated(true);
         setDateFilter({ startDate: range.firstDate, endDate:range.secondDate })
     }
     
@@ -69,5 +45,6 @@ export default useDashboard = (setDashboardFilterDate) => {
         setShowDatePicker,
         onRequestClose,
         onSelectDateRange,
+        dateFilter,
     }
 }

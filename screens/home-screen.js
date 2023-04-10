@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Box, Button } from 'native-base';
 import { View } from 'react-native';
 import { BottomTabNavigator } from '../components/tab';

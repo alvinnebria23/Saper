@@ -20,7 +20,7 @@ const retrieveLocalStorage = async (key) => {
 };
 const clearLocalStorage = async () => {
     try {
-        await AsyncStorage.clear();
+        return AsyncStorage.clear();
     } catch (error) {
         console.log(error)
     }

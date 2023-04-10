@@ -16,21 +16,11 @@ const checkApi = async (appId, secretKey) => {
 const getConversionReport = async (filter) => {
     try {
         const { appId, secretKey } = await retrieveLocalStorage('userData');
-        const response = await axios.post(`${HOST}/api/v1/shopee/conversionReport`, {
+        const response = await axios.post(`${HOST}/api/v1/shopee/dashboard`, {
             appId: appId,
             secretKey: secretKey,
             parameters: filter,
         });
-        if(response.data.errors){
-            const errorCode = response.data.errors[0].extensions.code;
-            if(errorCode === 11001){
-                return { error: true, message: "Please do filtering dates every 30 seconds only."};
-            }
-            if(errorCode === 10020){
-                return { error: true, message: "Your secret key is already expired. Please regenerate your secret key and update your information on the app."};
-            }
-            return { error: true, message: "Invalid request. Please check your App Id and Secret Key ."};
-        }
         return response.data;
     } catch (error) {
         console.log(error);

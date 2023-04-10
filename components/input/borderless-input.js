@@ -4,6 +4,7 @@ const BorderlessInput = ({
     label,
     value,
     onChange,
+    name,
 }) => {
     return (
       <TextInput
@@ -21,6 +22,7 @@ const BorderlessInput = ({
           margin: 0,  
           minWidth: '100%',
         }}
+        name={name}
         value={value}
         onChangeText={onChange}
       />

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Flex, Center, Icon, Text } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BorderlessInput } from '../input';
-const DetailCard = ({ iconName, label, value, style, withIcon = true, fontSize = "sm", isEditing = false }) => {
+const DetailCard = ({ onChange, iconName, label, value, style, withIcon = true, fontSize = "sm", isEditing = false, name }) => {
   return (
     <Flex direction="row" mt="1" style={{ ...styles.card, ...style }}>
         {withIcon && 
@@ -14,7 +14,7 @@ const DetailCard = ({ iconName, label, value, style, withIcon = true, fontSize =
           <Flex pl={withIcon ? 0 : 5} pr={withIcon ? 0 : 5} direction='column'>
             <Text color={'gray.400'} fontSize="xs" >{label}</Text>
             {isEditing ? 
-              <BorderlessInput label={label} value={value}/> :
+              <BorderlessInput onChange={onChange} label={label} value={value} name={name} /> :
               <Text pt={1.5} pb={1.6} fontSize={fontSize} >{value}</Text>
             }
           </Flex>

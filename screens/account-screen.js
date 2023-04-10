@@ -5,17 +5,17 @@ import { Avatar, Center, Heading,Row, ScrollView, Text } from 'native-base';
 import useCommon from '../hooks/useCommon.js';
 import DetailCard from '../components/card/detail-card.js';
 import LinkButton from '../components/button/LinkButton.js';
-import { TextInput } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
 const AccountScreen =  ({ navigation }) => {
+  const { control, setValue } = useForm();
   const { 
     userData, 
-    setuserData, 
     accountInfoFields, 
     apiInfoFields, 
     subscriptionInfoFields, 
     onPress,
     isEditing,
-  } = useAccount(navigation);
+  } = useAccount(navigation, setValue);
   const { formatName } = useCommon();
   return (
     <View style={{ flex: 1 }}>
@@ -34,12 +34,36 @@ const AccountScreen =  ({ navigation }) => {
         <View style={{ flex: 2, marginRight: 30, marginLeft: 30, marginTop: 30, marginBottom: '25%' }}>
           <Row mb={2}>
             <Heading size="xs" >Account Information</Heading>
-            <LinkButton onPress={onPress.bind(this, 'edit')} text={isEditing ? 'Update' : 'Edit'} style={{ right: 0, position: 'absolute'}} />
+            <LinkButton onPress={onPress.bind(this, 'edit', control._formValues)} text={isEditing ? 'Update' : 'Edit'} style={{ right: 0, position: 'absolute'}} />
           </Row>
           <View style={{ marginBottom: 20 }}>
-            {accountInfoFields.map(({ label, value, iconName }) => (
-              <DetailCard fontSize='xs' isEditing={isEditing} withIcon={false} key={label} label={label} value={value} iconName={iconName} />
-            ))}
+            {accountInfoFields.map(({ name, label, value: initialValue, iconName }) => {
+                return (
+                  <Controller 
+                    key={name}
+                    name={name}
+                    control={control}
+                    render={({ field: { onChange, value }}) => {
+                      if(!isEditing){
+                        value = initialValue;
+                      }
+                      return (
+                        <DetailCard 
+                          onChange={onChange} 
+                          fontSize='xs' 
+                          isEditing={isEditing} 
+                          withIcon={false} 
+                          key={label} 
+                          label={label} 
+                          value={value} 
+                          name={name}
+                          iconName={iconName} 
+                        />
+                      )
+                    }} 
+                  />
+                );
+              })}
           </View>
           <Row>
             <Heading size="xs" mb={2} mt={2}>Affiliate Open API</Heading>

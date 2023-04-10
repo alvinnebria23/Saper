@@ -9,7 +9,7 @@ const DashboardCardView = ({ type, name, value, isLoading }) => {
             (
               <Row>
                 {type === 'amount' && <Text style={{fontSize: 12, lineHeight: 18, color: '#FF4E00'}}>&#8369;</Text>}
-                <Heading size='lg' color={'black'}>{`${value}`}</Heading>
+                <Heading size='md' color={'black'}>{`${value}`}</Heading>
               </Row>
             )
           }

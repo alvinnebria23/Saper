@@ -33,7 +33,7 @@ export const DASHBOARD_CARD_STYLE = StyleSheet.create({
 export const DASHBOARD_DATE_BUTTONS = [
   { id: 0, name: 'Yesterday', value: 1},
   { id: 1, name: 'Last 7 days', value: 7},
-  { id: 2, name: 'Last 30 days', value: 30},
+  { id: 2, name: 'Last month', value: 30},
   { id: 3, name: 'Last 3 months', value: 90},
 ];
 
