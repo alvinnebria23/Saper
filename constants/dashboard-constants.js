@@ -9,8 +9,6 @@ export const EMPTY_DASHBOARD_VALUE = [
   { id: 6, name: "Cancelled", value: 0},
   { id: 7, name: "Completed", value: 0},
   { id: 8, name: "Pending", value: 0},
-  { id: 9, name: "Total Clicks", value: 0},
-  { id: 10, name: "Net Profit (Less Adspent/Tax 10%)", value: 0},
 ];
 
 export const DASHBOARD_CARD_STYLE = StyleSheet.create({
@@ -27,6 +25,18 @@ export const DASHBOARD_CARD_STYLE = StyleSheet.create({
     padding: 20,
     margin: '1%',
     flex: 2,
+  },
+  box: {
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    shadowOpacity: 0.26,
+    elevation: 8,
+    borderColor: 'gray',
+    borderRadius: 10,
+    elevation: 2,
+    backgroundColor: '#f6f7f9',
+    padding: 10,
   }
 });
 
