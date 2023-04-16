@@ -1,3 +1,4 @@
 import RoundedButton from "./rounded-button";
 import LinkButton from "./LinkButton";
-export { RoundedButton, LinkButton };
+import DatePickerButton from "./datepicker-button";
+export { RoundedButton, LinkButton, DatePickerButton };

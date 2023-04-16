@@ -1,26 +1,15 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
+import { View } from 'react-native';
+import { ImageLogo } from '../components/image';
+import { Heading } from 'native-base';
 const ClickReportScreen =  ({ navigation }) => {
-  async function pickDocument() {
-    try {
-      const { type, uri: csvUri, name } = await DocumentPicker.getDocumentAsync({
-        type: "text/comma-separated-values",
-        copyToCacheDirectory: false,
-      });
-      if(type === 'success'){
-        const content = await FileSystem.readAsStringAsync(csvUri, { encoding: FileSystem.EncodingType.UTF8, });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+
   return (
-    <View flex={1} style={{ backgroundColor: 'white'}}>
-        <TouchableOpacity onPress={pickDocument}>
-            <Text>Select Document</Text>
-        </TouchableOpacity>
+    <View flex={1} style={{ backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
+          <ImageLogo />
+          <Heading size={'2xl'} color={'gray.200'}>
+            COMING SOON
+          </Heading>
     </View>
   );
 };

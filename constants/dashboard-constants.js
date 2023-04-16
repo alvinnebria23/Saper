@@ -36,8 +36,13 @@ export const DASHBOARD_CARD_STYLE = StyleSheet.create({
     borderRadius: 10,
     elevation: 2,
     backgroundColor: '#f6f7f9',
-    padding: 10,
-  }
+    paddingRight: 10,
+    paddingLeft: 10,
+    marginLeft: '1%',
+    marginRight: '1%',
+    marginTop: '3%',
+    marginBottom: '1%', 
+  },
 });
 
 export const DASHBOARD_DATE_BUTTONS = [

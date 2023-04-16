@@ -7,12 +7,10 @@ import {
     getPastDate,
 } from '../util/DateUtil.js';
 import { YESTERDAY } from '../constants/dashboard-constants.js';
-export default useDashboard = (setDashboardFilterDate) => {
+export default useDatePicker = (setFilterDate) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [dateFilter, setDateFilter] = useState({});
-    const [isToggled, setIsToggled] = useState(false);
     const [isUpdated, setIsUpdated] = useState(false);
-    const [viewTopFive, setViewTopFive] = useState(false);
     const onRequestClose = ({ action, value }) => {
         let startDate;
         let endDate;
@@ -40,7 +38,7 @@ export default useDashboard = (setDashboardFilterDate) => {
         startDate.setHours(16, 0, 0, 0);
         const endDateText = formatDateToString(endDate, '11:59 PM');
         endDate.setHours(15, 59, 59);
-        setDashboardFilterDate({ startDate: { text: startDateText , unixtimestamp: formatDateToUnixTimestamp(startDate) }, endDate: { text: endDateText, unixtimestamp: formatDateToUnixTimestamp(endDate) }});
+        setFilterDate({ startDate: { text: startDateText , unixtimestamp: formatDateToUnixTimestamp(startDate) }, endDate: { text: endDateText, unixtimestamp: formatDateToUnixTimestamp(endDate) }});
         setShowDatePicker(false);
         setIsUpdated(false);
     }
@@ -49,14 +47,6 @@ export default useDashboard = (setDashboardFilterDate) => {
         setIsUpdated(true);
         setDateFilter({ startDate: range.firstDate, endDate:range.secondDate })
     }
-
-    const onPressSwitch = () => {
-        setIsToggled(!isToggled);
-    };
-
-    const onPressView = () => {
-        setViewTopFive(!viewTopFive);
-    }
     
     return {
         showDatePicker,
@@ -64,9 +54,5 @@ export default useDashboard = (setDashboardFilterDate) => {
         onRequestClose,
         onSelectDateRange,
         dateFilter,
-        onPressSwitch,
-        isToggled,
-        onPressView,
-        viewTopFive
     }
 }

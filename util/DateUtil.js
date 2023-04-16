@@ -14,9 +14,9 @@ const getDateToday = () => {
 
 const getPastDate = (numberOfDays) => {
   const now = getLocalCurrentDate();
-  const sevenDaysAgoDate = new Date(now.getTime() - numberOfDays * 24 * 60 * 60 * 1000); // date 7 days ago in GMT+8
-  const sevenDaysAgoDateaAndTime = new Date(sevenDaysAgoDate.getFullYear(), sevenDaysAgoDate.getMonth(), sevenDaysAgoDate.getDate());
-  return sevenDaysAgoDateaAndTime;
+  const pastDate = new Date(now.getTime() - numberOfDays * 24 * 60 * 60 * 1000);
+  const pastDateAndTime = new Date(pastDate.getFullYear(), pastDate.getMonth(), pastDate.getDate());
+  return pastDateAndTime;
 };
 
 const formatDateToString = (date, time) => {
@@ -37,16 +37,19 @@ const formatDateToUnixTimestamp = (date) => {
 };
 
 const getDefaultFilter = () => {
-  // get the first day of last months date
   const today = new Date();
-  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-  const firstDayOfLastMonth = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
-  const formattedFirstDayDate = formatDateToString(firstDayOfLastMonth, '12:00 AM');
-  // get the last day of last months date
-  const lastDayOfLastMonth = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0,23,59,59,999);
-  const formattedLastDayDate = formatDateToString(lastDayOfLastMonth, '11:59 PM');
+  const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+  const formattedLastWeekDate = formatDateToString(lastWeek, '12:00 AM');
+  
+  const formattedCurrentDate = formatDateToString(today, '11:59 PM');
+  today.setHours(23);
+  today.setMinutes(59);
+  today.setSeconds(59);
 
-  return { startDate: { text: formattedFirstDayDate , unixtimestamp: formatDateToUnixTimestamp(firstDayOfLastMonth) }, endDate: { text: formattedLastDayDate, unixtimestamp: formatDateToUnixTimestamp(lastDayOfLastMonth) }};
+  return {
+    startDate: { text: formattedLastWeekDate, unixtimestamp: formatDateToUnixTimestamp(lastWeek) },
+    endDate: { text: formattedCurrentDate, unixtimestamp: formatDateToUnixTimestamp(today) }
+  };
 };
 
 export { 

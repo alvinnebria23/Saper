@@ -10,9 +10,26 @@ import { CustomModalSpinner } from '../components/spinner/index.js';
 import useHome from '../hooks/useHome.js';
 import { useRef } from 'react';
 import AccountScreen from './account-screen';
+import ConversionReportScreen from './conversion-report-screen';
 const HomeScreen = ({ navigation }) => {
-  const { selected, onPressTab, setSelected} = useBottomNavigator(navigation);
-  const { onCloseDialog, status, dashboardData, dashboardFilterDate, setDashboardFilterDate, isLoading, topFiveSubIds } = useHome();
+  const { 
+    selected, 
+    onPressTab, 
+    setSelected
+  } = useBottomNavigator(navigation);
+  const { 
+    onCloseDialog, 
+    status, 
+    dashboardData, 
+    dashboardFilterDate, 
+    setDashboardFilterDate, 
+    isLoading, 
+    topFiveSubIds,
+    conversionFilterDate,
+    setConversionFilterDate,
+    conversionData,
+    setConversionData,
+  } = useHome();
   const renderSelectedScreen = () => {
     switch(selected){
       case 0:
@@ -26,6 +43,15 @@ const HomeScreen = ({ navigation }) => {
           />
         );
       case 1:
+        return (
+          <ConversionReportScreen 
+            conversionData={conversionData}
+            conversionFilterDate={conversionFilterDate}
+            setConversionFilterDate={setConversionFilterDate}
+            setConversionData={setConversionData}
+          />
+        );
+      case 2:
         return (<ClickReportScreen />);
       case 3:
         return (<AccountScreen navigation={navigation} />);
@@ -35,7 +61,7 @@ const HomeScreen = ({ navigation }) => {
   } 
   const cancelRef = useRef(null);
   return (
-    <View flex={1} style={{ backgroundColor: 'white'}}>
+    <View flex={1} style={{ backgroundColor: 'white'}} pointerEvents={isLoading ? 'none' : 'auto'}>
       {isLoading && <CustomModalSpinner message={'Fetching data, please wait . . .'} />}
       <AlertDialogComponent 
         cancelRef={cancelRef}
