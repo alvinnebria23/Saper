@@ -59,7 +59,7 @@ const ConversionReportScreen =  ({
   };
   function getIndicator(isExpanded, hasChildrenNodes) {
     if (!hasChildrenNodes) {
-      return ''
+      return ' '
     } else if (isExpanded) {
       return '-'
     } else {
@@ -79,7 +79,7 @@ const ConversionReportScreen =  ({
             endDateText={conversionFilterDate.endDate.text}
         />
         <TreeView
-          data={conversion} // defined above
+          data={conversionData || conversion} // defined above7
           renderNode={({ node, level, isExpanded, hasChildrenNodes }) => {
             return (
               <View>

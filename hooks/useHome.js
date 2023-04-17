@@ -33,7 +33,7 @@ export default useHome = () => {
             }else{
                 setTopFiveSubIds(data.topFiveSubIds)
                 setDashboardData(data.overAllTotal);
-                setConversionData(data.conversionData);
+                setConversionData(data.conversionReport);
             }
             setIsLoading(false);
         };
@@ -78,9 +78,12 @@ export default useHome = () => {
                     purchaseTimeEnd:${conversionFilterDate.endDate.unixtimestamp}, 
                     limit:500
                 `);
+                if(data?.conversionReport){
+                    setConversionData(data.conversionReport);
+                }
                 setIsLoading(false);
-                };
-                fetchData();
+            };
+            fetchData();
         }
         setIsInitialRender(false);
     }, [conversionFilterDate]);
