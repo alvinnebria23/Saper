@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         marginLeft: '5%', 
         marginRight: '5%', 
         marginBottom: '50%', 
-        marginTop: '20%', 
+        marginTop: '10%', 
         padding: '5%', 
         backgroundColor: 'white'
     },

@@ -6,6 +6,7 @@ import { RangeDatePickerModal } from '../components/modal';
 import { DatePickerButton } from '../components/button';
 import { DASHBOARD_CARD_STYLE, EMPTY_DASHBOARD_VALUE } from '../constants/dashboard-constants';
 import useDatePicker from '../hooks/useDatePicker';
+import { NoDataFound } from '../components/image';
 const DashboardScreen = ({ dashboardFilterDate, setDashboardFilterDate, dashboardData, isLoading, topFiveSubIds }) => {
     const [isToggled, setIsToggled] = useState(false);
     const {
@@ -35,7 +36,7 @@ const DashboardScreen = ({ dashboardFilterDate, setDashboardFilterDate, dashboar
     };
     const renderSubIds = () => {
         return (
-            <Column style={{ ...DASHBOARD_CARD_STYLE.box }}>
+            <Column style={{ ...DASHBOARD_CARD_STYLE.box, marginBottom: "17%" }}>
                 <Center mt={1}>
                     <Text fontWeight={'bold'} color={'black'}> Top 5 Sub-ID {'(Commission)'}</Text>
                     <Divider m={1}/>
@@ -51,7 +52,7 @@ const DashboardScreen = ({ dashboardFilterDate, setDashboardFilterDate, dashboar
     };
     const renderNetProfit = () => {
         return (
-            <Column style={{...DASHBOARD_CARD_STYLE.box}}>
+            <Column style={{...DASHBOARD_CARD_STYLE.box, marginBottom: "1%" }}>
                 <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text fontWeight={'bold'} color={'black'}> 
                         NET PROFIT
@@ -79,7 +80,7 @@ const DashboardScreen = ({ dashboardFilterDate, setDashboardFilterDate, dashboar
         return netProft?.toLocaleString() || '';
     }
     return (
-        <View bg="white" width="100%" height={'100%'} style={{ paddingTop: '10%' }}>
+        <View bg="white" width="100%" height={'100%'}>
             {renderDatePicker()}
             <View>
                 <Heading ml='5%' mt='5%' mb={'4%'} size='md' color={'primary.50'}>Dashboard</Heading>
@@ -90,7 +91,9 @@ const DashboardScreen = ({ dashboardFilterDate, setDashboardFilterDate, dashboar
                     startDateText={dashboardFilterDate.startDate.text} 
                     endDateText={dashboardFilterDate.endDate.text}
                 />
-                <View>
+                {dashboardData.length ? 
+                <>
+                  <View>
                     <FlatList
                         data={isLoading ? EMPTY_DASHBOARD_VALUE : dashboardData}
                         renderItem={renderItem}
@@ -98,11 +101,12 @@ const DashboardScreen = ({ dashboardFilterDate, setDashboardFilterDate, dashboar
                         numColumns={2}
                         scrollEnabled={false}
                     />
-                </View>
-                <ScrollView style={{ height: 'auto' }}>
-                    {!isLoading && renderNetProfit()}
-                    {!isLoading && renderSubIds()}
-                </ScrollView>
+                    </View>
+                    <ScrollView style={{ height: 'auto' }}>
+                        {!isLoading && renderNetProfit()}
+                        {!isLoading && renderSubIds()}
+                    </ScrollView>
+                </> : <NoDataFound />}
             </View>
         </View>
     );

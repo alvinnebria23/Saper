@@ -36,7 +36,6 @@ export default useAccount = (navigation, setValue) => {
             setValue(name, value)
           })
         }
-        console.log(formValues);
         setIsEditing(!isEditing);
       }
     };

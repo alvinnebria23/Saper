@@ -28,11 +28,11 @@ export default useHome = () => {
                     isOpen: true,
                 };
                 setStatus(status);
-                setDashboardData(EMPTY_DASHBOARD_VALUE);
+                setDashboardData([]);
                 setConversionData([]);
             }else{
-                setTopFiveSubIds(data.topFiveSubIds)
-                setDashboardData(data.overAllTotal);
+                setTopFiveSubIds(data.topFiveSubIds);
+                setDashboardData(data.totals);
                 setConversionData(data.conversionReport);
             }
             setIsLoading(false);
@@ -52,15 +52,15 @@ export default useHome = () => {
                 `);
                 if(data?.error){
                     const status = {
-                        header: 'Error message',
+                        header: 'Dashboard Error message',
                         body: data?.message,
                         isOpen: true,
                     };
                     setStatus(status);
-                    setDashboardData(EMPTY_DASHBOARD_VALUE);
+                    setDashboardData([]);
                 }else{
                     setTopFiveSubIds(data.topFiveSubIds)
-                    setDashboardData(data.overAllTotal);
+                    setDashboardData(data.totals);
                 }
                 setIsLoading(false);
             };
@@ -78,7 +78,15 @@ export default useHome = () => {
                     purchaseTimeEnd:${conversionFilterDate.endDate.unixtimestamp}, 
                     limit:500
                 `);
-                if(data?.conversionReport){
+                if(data?.errors){
+                    const status = {
+                        header: 'Conversion Report Error message',
+                        body: data?.message,
+                        isOpen: true,
+                    };
+                    setStatus(status);
+                    setConversionData([]);
+                }else{
                     setConversionData(data.conversionReport);
                 }
                 setIsLoading(false);

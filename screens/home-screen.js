@@ -28,7 +28,6 @@ const HomeScreen = ({ navigation }) => {
     conversionFilterDate,
     setConversionFilterDate,
     conversionData,
-    setConversionData,
   } = useHome();
   const renderSelectedScreen = () => {
     switch(selected){
@@ -48,7 +47,6 @@ const HomeScreen = ({ navigation }) => {
             conversionData={conversionData}
             conversionFilterDate={conversionFilterDate}
             setConversionFilterDate={setConversionFilterDate}
-            setConversionData={setConversionData}
           />
         );
       case 2:
@@ -75,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
           </Button>
         )}
       />
-      <View flex={1}>
+      <View flex={1} style={{ marginTop: "5%" }}>
           {renderSelectedScreen()}
       </View>
       <Box style={{ position: 'absolute', bottom: 0 }} width="100%" alignSelf="center">

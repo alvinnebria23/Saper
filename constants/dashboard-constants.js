@@ -41,7 +41,6 @@ export const DASHBOARD_CARD_STYLE = StyleSheet.create({
     marginLeft: '1%',
     marginRight: '1%',
     marginTop: '3%',
-    marginBottom: '1%', 
   },
 });
 
