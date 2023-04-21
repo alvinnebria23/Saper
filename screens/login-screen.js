@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Button, Text, Row, Column, IconButton, Icon, FormControl  } from 'native-base';
+import { Button, Text, Row, Column, IconButton, Icon, FormControl, ScrollView  } from 'native-base';
 import { RoundedButton } from '../components/button';
 import { View } from 'react-native';
 import { LOGO_STYLES_VIEW, BOTTOM_VIEW, CENTER_SCREEN_VIEW, FORM_STYLES_VIEW  } from '../constants/view-component-styles.js';
@@ -23,7 +23,7 @@ const LoginScreen = ({ navigation }) => {
     }, [])
 
   return (
-    <View style={CENTER_SCREEN_VIEW}>
+    <ScrollView style={CENTER_SCREEN_VIEW}>
         <View style={LOGO_STYLES_VIEW}>
             <ImageLogo />
         </View>
@@ -96,7 +96,7 @@ const LoginScreen = ({ navigation }) => {
                 <Button onPress={onPressNavigate.bind(this, navigation,'Register')} variant={'link'} colorScheme={'orange'}> Register </Button>
             </Row>
         </View>
-    </View>
+    </ScrollView>
   );
 };
 

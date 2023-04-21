@@ -7,8 +7,15 @@ import { DatePickerButton } from '../components/button';
 import { DASHBOARD_CARD_STYLE, EMPTY_DASHBOARD_VALUE } from '../constants/dashboard-constants';
 import useDatePicker from '../hooks/useDatePicker';
 import { NoDataFound } from '../components/image';
-const DashboardScreen = ({ dashboardFilterDate, setDashboardFilterDate, dashboardData, isLoading, topFiveSubIds }) => {
-    const [isToggled, setIsToggled] = useState(false);
+const DashboardScreen = ({ 
+    dashboardFilterDate, 
+    setDashboardFilterDate, 
+    dashboardData, 
+    isLoading, 
+    topFiveSubIds,
+    isToggled,
+    setIsToggled,
+}) => {
     const {
         showDatePicker, 
         setShowDatePicker, 
@@ -44,7 +51,7 @@ const DashboardScreen = ({ dashboardFilterDate, setDashboardFilterDate, dashboar
                 {topFiveSubIds.map((item, index) => (
                     <Row key={index}>
                             <Text style={{ marginLeft: '2%'}} flex={1} key={index}>{`${index + 1}. ${item.subId}`}</Text>
-                            <Text style={{ right: 0 , position: 'absolute', marginRight: '2%'}} flex={1} key={Math.random()}>&#8369;{` ${item.totalCommission}`}</Text>
+                            <Text style={{ right: 0 , position: 'absolute', marginRight: '2%'}} flex={1} key={Math.random()}>&#8369;{` ${parseInt(item.totalCommission).toLocaleString()}`}</Text>
                     </Row>
                 ))}
             </Column>
@@ -74,41 +81,40 @@ const DashboardScreen = ({ dashboardFilterDate, setDashboardFilterDate, dashboar
           );
     };
     const displayNetProfit = () => {
-        const totalCommission = parseInt(dashboardData[0]?.value?.replace(',', ""));
+        const totalCommission = dashboardData[0]?.value;
         const tax = isToggled ? totalCommission * 0.05 : totalCommission * 0.1;
         const netProft =  totalCommission - tax;
-        return netProft?.toLocaleString() || '';
+        return parseFloat(netProft).toLocaleString();
     }
     return (
-        <View bg="white" width="100%" height={'100%'}>
+        <>
             {renderDatePicker()}
-            <View>
-                <Heading ml='5%' mt='5%' mb={'4%'} size='md' color={'primary.50'}>Dashboard</Heading>
-            </View>
-            <View style={{ marginLeft: '4%' , marginRight: '4%', flex: 2 }}>
-                <DatePickerButton 
-                    setShowDatePicker={setShowDatePicker} 
-                    startDateText={dashboardFilterDate.startDate.text} 
-                    endDateText={dashboardFilterDate.endDate.text}
-                />
-                {dashboardData.length ? 
-                <>
-                  <View>
-                    <FlatList
-                        data={isLoading ? EMPTY_DASHBOARD_VALUE : dashboardData}
-                        renderItem={renderItem}
-                        keyExtractor={keyExtractor}
-                        numColumns={2}
-                        scrollEnabled={false}
+            <View width="100%" height={'100%'}>
+                <View>
+                    <Heading ml='5%' mt='5%' mb={'4%'} size='md' color={'primary.50'}>Dashboard</Heading>
+                </View>
+                <View style={{ marginLeft: '4%' , marginRight: '4%', flex: 2 }}>
+                    <DatePickerButton 
+                        setShowDatePicker={setShowDatePicker} 
+                        startDateText={dashboardFilterDate.startDate.text} 
+                        endDateText={dashboardFilterDate.endDate.text}
                     />
-                    </View>
-                    <ScrollView style={{ height: 'auto' }}>
-                        {!isLoading && renderNetProfit()}
-                        {!isLoading && renderSubIds()}
-                    </ScrollView>
-                </> : <NoDataFound />}
+                    {dashboardData.length ? 
+                        <FlatList
+                            data={isLoading ? EMPTY_DASHBOARD_VALUE : dashboardData}
+                            renderItem={renderItem}
+                            keyExtractor={keyExtractor}
+                            numColumns={2}
+                            ListFooterComponent={                   
+                                <View style={{ height: 'auto', marginBottom: '5%' }}>
+                                    {!isLoading && renderNetProfit()}
+                                    {!isLoading && renderSubIds()}
+                                </View>
+                            }
+                        /> : <NoDataFound />}
+                </View>
             </View>
-        </View>
+        </>
     );
 };
 

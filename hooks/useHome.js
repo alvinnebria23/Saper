@@ -12,7 +12,7 @@ export default useHome = () => {
     const [topFiveSubIds, setTopFiveSubIds] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialRender, setIsInitialRender] = useState(true);
-
+    const [isToggled, setIsToggled] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
@@ -33,7 +33,7 @@ export default useHome = () => {
             }else{
                 setTopFiveSubIds(data.topFiveSubIds);
                 setDashboardData(data.totals);
-                setConversionData(data.conversionReport);
+                setConversionData(data.conversionReport?.conversionReport || []);
             }
             setIsLoading(false);
         };
@@ -87,7 +87,7 @@ export default useHome = () => {
                     setStatus(status);
                     setConversionData([]);
                 }else{
-                    setConversionData(data.conversionReport);
+                    setConversionData(data.conversionReport || []);
                 }
                 setIsLoading(false);
             };
@@ -113,6 +113,8 @@ export default useHome = () => {
         topFiveSubIds,
         conversionFilterDate,
         setConversionFilterDate,
-        conversionData
+        conversionData,
+        isToggled,
+        setIsToggled,
     }
 }

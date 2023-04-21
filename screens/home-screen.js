@@ -28,6 +28,8 @@ const HomeScreen = ({ navigation }) => {
     conversionFilterDate,
     setConversionFilterDate,
     conversionData,
+    isToggled,
+    setIsToggled,
   } = useHome();
   const renderSelectedScreen = () => {
     switch(selected){
@@ -39,6 +41,8 @@ const HomeScreen = ({ navigation }) => {
             setDashboardFilterDate={setDashboardFilterDate} 
             isLoading={isLoading}
             topFiveSubIds={topFiveSubIds}
+            isToggled={isToggled}
+            setIsToggled={setIsToggled}
           />
         );
       case 1:
@@ -47,6 +51,8 @@ const HomeScreen = ({ navigation }) => {
             conversionData={conversionData}
             conversionFilterDate={conversionFilterDate}
             setConversionFilterDate={setConversionFilterDate}
+            isToggled={isToggled}
+            setIsToggled={setIsToggled}
           />
         );
       case 2:
@@ -76,7 +82,7 @@ const HomeScreen = ({ navigation }) => {
       <View flex={1} style={{ marginTop: "5%" }}>
           {renderSelectedScreen()}
       </View>
-      <Box style={{ position: 'absolute', bottom: 0 }} width="100%" alignSelf="center">
+      <Box bg={'white'} style={{ position: 'absolute', bottom: 0 }} width="100%" alignSelf="center">
         <BottomTabNavigator selected={selected} onPressTab={onPressTab} setSelected={setSelected} />
       </Box>
     </View>

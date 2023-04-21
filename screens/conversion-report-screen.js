@@ -8,13 +8,13 @@ import TreeView from 'react-native-final-tree-view';
 import { DASHBOARD_CARD_STYLE } from '../constants/dashboard-constants';
 import { NoDataFound } from '../components/image';
 import { TwoColumnLabel } from '../components/label';
-import { useState } from 'react';
 const ConversionReportScreen =  ({ 
   conversionData,
   conversionFilterDate,
   setConversionFilterDate,
+  isToggled,
+  setIsToggled
 }) => {
-  const [isToggled, setIsToggled] = useState(false);
   const {
     showDatePicker, 
       setShowDatePicker, 
@@ -42,15 +42,19 @@ const ConversionReportScreen =  ({
       return '+'
     }
   }
+  const display = () => {
+    console.log(conversionData.conversionReport);
+  }
+  display();
   const getTax = () => {
     const taxPercentage = isToggled ? 0.05 : 0.1;
-    return parseInt(parseInt(conversionData.grandTotal) * taxPercentage).toLocaleString();
+    return parseFloat(parseFloat(conversionData.grandTotal) * taxPercentage).toLocaleString();
   }
   const getNetProft = () => {
-    const grandTotal = parseInt(conversionData.grandTotal);
+    const grandTotal = parseFloat(conversionData.grandTotal);
     const taxPercentage = isToggled ? 0.05 : 0.1;
 
-    return parseInt(grandTotal - (grandTotal * taxPercentage)).toLocaleString();
+    return parseFloat(grandTotal - (grandTotal * taxPercentage)).toLocaleString();
   }
   return (
     <View bg="white" width="100%" height={'100%'}>
@@ -93,8 +97,9 @@ const ConversionReportScreen =  ({
                   }}>
                     <TwoColumnLabel 
                       type='text'
+
                       fontSize={15}
-                      leftLabel={`${getIndicator(isExpanded, hasChildrenNodes)} ${node.name}`}
+                      leftLabel={`${getIndicator(isExpanded, hasChildrenNodes)} ${node.level} ${node.name}`}
                       leftLabelStyle={{ alignSelf: 'flex-start', marginLeft: 25 * level }}
                       rightLabel={parseInt(node.totalCommission).toLocaleString()}
                       rightLabelStyle={{ alignSelf: 'flex-end', marginLeft: 10 }}

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Column, Icon, KeyboardAvoidingView, IconButton, Button, Heading, Text } from 'native-base';
+import { Column, Icon, KeyboardAvoidingView, IconButton, Button, Heading, Text, Row, ScrollView } from 'native-base';
 import { TouchableOpacity, View } from 'react-native';
 import { LOGO_STYLES_VIEW  } from '../constants/view-component-styles.js';
 import { LeftIconInput } from '../components/input';
@@ -26,10 +26,14 @@ const RegisterScreen = ({ navigation }) => {
   } = useRegister({ setValue, navigation});
   const cancelRef = useRef(null);
   return (
-      <View style={{ flex: 1, marginTop: '13%' }}>
+      <ScrollView style={{ flex: 1, marginTop: '13%' }}>
           <View>
             <TouchableOpacity onPress={onPressBack}>
-            <Icon size={7} ml={4} color={'#FF4E00'} as={<MaterialCommunityIcons  name={'arrow-left'} />} />
+              <Row style={{ alignItems: 'center' }}>
+                <Icon size={5} ml={4} color={'#FF4E00'} as={<MaterialCommunityIcons  name={'arrow-left'} />} />
+                <Text color={"#FF4E00"} fontSize={16}> Back </Text>
+              </Row>
+
             </TouchableOpacity>
           </View>
           <View style={LOGO_STYLES_VIEW}>
@@ -51,7 +55,7 @@ const RegisterScreen = ({ navigation }) => {
               )}
             />
           </>
-      </View>
+      </ScrollView>
   );
 };
 const renderAccountInformation = (formValues) => {
@@ -85,7 +89,6 @@ const renderAccountInformation = (formValues) => {
 };
 const render = ({control, onPressNext, onPressClearButton, errorInputFields, status, isConfirm, spinnerObject }) => {
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ProgressSteps {...PROGRESS_STEPS_STYLE}>
         <ProgressStep 
           errors={errorInputFields.length > 0}
@@ -228,7 +231,6 @@ const render = ({control, onPressNext, onPressClearButton, errorInputFields, sta
           </View>
         </ProgressStep>
     </ProgressSteps>
-  </KeyboardAvoidingView>
   );
 }
 

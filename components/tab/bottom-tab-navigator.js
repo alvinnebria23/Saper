@@ -8,8 +8,6 @@ import { Animated, Dimensions } from 'react-native';
 
 const BottomTabNavigator = ({ navigation, onPressTab, selected }) => {
   const { capitalizeFirstLetter } = useCommon();
-  const screenHeight = Dimensions.get('screen').height;
-  const buttonHeight = screenHeight * 0.07;
   const [animated, setAnimated] = useState(BOTTOM_TAB_NAVIGATOR_OBJECT.map(() => new Animated.Value(1)));
   const [selectedTab, setSelectedTab] = useState(null);
   const fadeIn = (index) => {
@@ -31,7 +29,7 @@ const BottomTabNavigator = ({ navigation, onPressTab, selected }) => {
   };
 
   return (
-    <HStack bg="white" alignItems="center" safeAreaBottom style= {{ elevation: 24 }}>
+    <HStack bg="white" alignItems="center" style= {{ elevation: 24 }}>
       {BOTTOM_TAB_NAVIGATOR_OBJECT.map((item, index) => (
         <View key={item['name']} style={{ flex: 1 }}>
           <TouchableOpacity
@@ -39,7 +37,6 @@ const BottomTabNavigator = ({ navigation, onPressTab, selected }) => {
             style={{
               backgroundColor: 'white',
               flex: 1,
-              height: buttonHeight,
             }}
             onPressIn={() => fadeIn(index)}
             onPressOut={() => fadeOut(index)}

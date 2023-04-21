@@ -1,8 +1,8 @@
-import { Modal, View, StyleSheet } from "react-native";
+import { Modal, View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import { DASHBOARD_DATE_BUTTONS } from "../../constants/dashboard-constants";
 import DateRangePicker from "rn-select-date-range";
 import moment from "moment";
-import { Button, FlatList, Heading, Text, Row } from "native-base";
+import { Button, FlatList, Heading, Text, Row, ScrollView } from "native-base";
 import { formatDateToString } from "../../util/DateUtil";
 const RangeDatePickerModal = ({
     showDatePicker,
@@ -32,58 +32,65 @@ const RangeDatePickerModal = ({
     };
 
     return (
-        <Modal 
-            visible={showDatePicker} 
-            onRequestClose={onRequestClose.bind(this, {action: 'close'})}
-            animationType='fade'
-            transparent={true}
-        >
-            <View style={styles.modal}>
-                <View style={styles.container}>
-                    <FlatList
-                        data={DASHBOARD_DATE_BUTTONS}
-                        renderItem={renderItem}
-                        keyExtractor={keyExtractor}
-                        numColumns={2}
-                        scrollEnabled={true}
-                        style={{ marginBottom: 15 }}
-                    />
-                    <Row>
-                        <Text fontWeight={'bold'}>Start Date:&nbsp;</Text>
-                        {dateRange?.startDate && <Text>{formatDateToString(new Date(dateRange?.startDate),  '12:00 AM')}</Text>}
-                    </Row>
-                    <Row>
-                        <Text fontWeight={'bold'}>End Date:&nbsp;</Text>
-                        {dateRange?.endDate && <Text>{formatDateToString(new Date(dateRange?.endDate), '11:59 PM')}</Text>}
-                    </Row>
-                    <View style={{ marginTop: 10,}}>
-                        <DateRangePicker
-                            onSelectDateRange={onSelectDateRange}
-                            responseFormat="YYYY-MM-DD"
-                            maxDate={moment()}
-                            minDate={moment().subtract(90, "days")}
-                            clearBtnTitle={'Reset'}
-                            confirmBtnTitle={'Done'}
-                            onConfirm={onRequestClose.bind(this, {action: 'close'})}
-                        />
+        <View>
+            <Modal 
+                visible={showDatePicker} 
+                onRequestClose={onRequestClose.bind(this, {action: 'close'})}
+                animationType='fade'
+                transparent={true}
+            >
+                <View style={styles.modal}>
+                    <View style={styles.container}>
+                        <View>
+                            <FlatList
+                                data={DASHBOARD_DATE_BUTTONS}
+                                renderItem={renderItem}
+                                keyExtractor={keyExtractor}
+                                numColumns={2}
+                            />
+                        </View>
+                        <ScrollView>
+                            <View style={{ marginBottom: '2%'}}>
+                                <Row>
+                                    <Text fontWeight={'bold'}>Start Date:&nbsp;</Text>
+                                    {dateRange?.startDate && <Text>{formatDateToString(new Date(dateRange?.startDate),  '12:00 AM')}</Text>}
+                                </Row>
+                                <Row>
+                                    <Text fontWeight={'bold'}>End Date:&nbsp;</Text>
+                                    {dateRange?.endDate && <Text>{formatDateToString(new Date(dateRange?.endDate), '11:59 PM')}</Text>}
+                                </Row>
+                            </View>
+                            <DateRangePicker
+                                onSelectDateRange={onSelectDateRange}
+                                responseFormat="YYYY-MM-DD"
+                                maxDate={moment()}
+                                minDate={moment().subtract(90, "days")}
+                                clearBtnTitle={'Reset'}
+                                confirmBtnTitle={'Done'}
+                                onConfirm={onRequestClose.bind(this, {action: 'close'})}
+                            />
+                        </ScrollView>
+
                     </View>
                 </View>
-            </View>
-        </Modal>
+            </Modal>
+        </View>
     )
 }
+const screenHeight = Dimensions.get('screen').height;
 const styles = StyleSheet.create({
     modal: {
-        backgroundColor: 'rgba(0,0,0,0.5)'
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        height: '100%',
     },
     container: {
         borderRadius: 10, 
         marginLeft: '5%', 
         marginRight: '5%', 
-        marginBottom: '50%', 
         marginTop: '10%', 
         padding: '5%', 
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        height: screenHeight > 700 ? 'auto' : screenHeight * .8
     },
 });
 

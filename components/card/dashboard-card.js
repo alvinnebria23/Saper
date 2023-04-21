@@ -9,7 +9,8 @@ const DashboardCardView = ({ type, name, value, isLoading }) => {
             (
               <Row>
                 {type === 'amount' && <Text style={{fontSize: 12, lineHeight: 18, color: '#FF4E00'}}>&#8369;</Text>}
-                <Heading size='md' color={'black'}>{`${value}`}</Heading>
+                <Heading size='md' color={'black'}>{`${parseInt(value).toLocaleString()}`}</Heading>
+                {type === 'amount' && <Text style={{fontSize: 12, lineHeight: 25, color: 'gray' }}>.{value.toFixed(2).split('.')[1] || ''}</Text>}
               </Row>
             )
           }
