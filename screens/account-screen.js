@@ -18,7 +18,7 @@ const AccountScreen =  ({ navigation }) => {
   } = useAccount(navigation, setValue);
   const { formatName } = useCommon();
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
       <View style={{ marginTop: "30%"}}>
         <Center>
           <Avatar size={'xl'} bg="#FF4E00" mb={2}>
@@ -30,7 +30,6 @@ const AccountScreen =  ({ navigation }) => {
           <LinkButton onPress={onPress.bind(this, 'logout')} text={'Log out'} style={{ marginTop: 10 }} />
         </Center>
       </View>
-      <ScrollView>
         <View style={{ flex: 2, marginRight: 30, marginLeft: 30, marginTop: 30, marginBottom: '25%' }}>
           <Row mb={2}>
             <Heading size="xs" >Account Information</Heading>
@@ -84,9 +83,7 @@ const AccountScreen =  ({ navigation }) => {
             <Text fontSize={'xs'} style={{ fontWeight: '300'}}> Email us at customer@sapers.ph</Text>
           </View>
         </View>
-
-      </ScrollView>
-    </View>
+    </ScrollView>
   );
 };
 

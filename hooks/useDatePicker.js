@@ -33,10 +33,10 @@ export default useDatePicker = (setFilterDate) => {
             startDate = new Date(dateFilter.startDate);
             endDate = new Date(dateFilter.endDate);
         }
-        const startDateText = formatDateToString(startDate, '12:00 AM');
+        const startDateText = formatDateToString(startDate);
         startDate.setDate(startDate.getDate() - 1);
         startDate.setHours(16, 0, 0, 0);
-        const endDateText = formatDateToString(endDate, '11:59 PM');
+        const endDateText = formatDateToString(endDate);
         endDate.setHours(15, 59, 59);
         setFilterDate({ startDate: { text: startDateText , unixtimestamp: formatDateToUnixTimestamp(startDate) }, endDate: { text: endDateText, unixtimestamp: formatDateToUnixTimestamp(endDate) }});
         setShowDatePicker(false);

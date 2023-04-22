@@ -10,7 +10,7 @@ const BorderlessInput = ({
       <TextInput
         key={label}
         style={{
-          borderBottomWidth: 0.3, 
+          borderBottomWidth: 0.4, 
           borderBottomColor: '#FF4E00',
           borderLeftWidth: 0,
           borderRightWidth: 0,

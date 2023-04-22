@@ -19,7 +19,7 @@ const getPastDate = (numberOfDays) => {
   return pastDateAndTime;
 };
 
-const formatDateToString = (date, time) => {
+const formatDateToString = (date) => {
   if(!date){
     return '';
   }
@@ -27,7 +27,7 @@ const formatDateToString = (date, time) => {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  }).replace(',', '') + " " + time;
+  }).replace(',', '');
   return formattedDate ;
 };
 
@@ -39,9 +39,9 @@ const formatDateToUnixTimestamp = (date) => {
 const getDefaultFilter = () => {
   const today = new Date();
   const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
-  const formattedLastWeekDate = formatDateToString(lastWeek, '12:00 AM');
+  const formattedLastWeekDate = formatDateToString(lastWeek);
   
-  const formattedCurrentDate = formatDateToString(today, '11:59 PM');
+  const formattedCurrentDate = formatDateToString(today);
   today.setHours(23);
   today.setMinutes(59);
   today.setSeconds(59);
