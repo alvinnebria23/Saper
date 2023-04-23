@@ -46,14 +46,17 @@ const HomeScreen = ({ navigation }) => {
           />
         );
       case 1:
-        return (
+        return (<>
+          {!isLoading && 
           <ConversionReportScreen 
-            conversionData={conversionData}
-            conversionFilterDate={conversionFilterDate}
-            setConversionFilterDate={setConversionFilterDate}
-            isToggled={isToggled}
-            setIsToggled={setIsToggled}
-          />
+              conversionData={conversionData}
+              conversionFilterDate={conversionFilterDate}
+              setConversionFilterDate={setConversionFilterDate}
+              isToggled={isToggled}
+              setIsToggled={setIsToggled}
+              isLoading={isLoading}
+            />}
+          </>
         );
       case 2:
         return (<ClickReportScreen />);

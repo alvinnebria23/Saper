@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { getConversionReport, getDashboardReport, getInitialData } from '../api/ShopeeApi';
-import { EMPTY_DASHBOARD_VALUE } from '../constants/dashboard-constants';
 import { getDefaultFilter } from '../util/DateUtil';
 export default useHome = () => {
     const [status, setStatus] = useState({});
@@ -116,5 +115,6 @@ export default useHome = () => {
         conversionData,
         isToggled,
         setIsToggled,
+        isLoading,
     }
 }
