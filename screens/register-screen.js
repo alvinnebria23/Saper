@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Column, Icon, KeyboardAvoidingView, IconButton, Button, Heading, Text, Row, ScrollView } from 'native-base';
+import { Column, Icon, IconButton, Button, Heading, Text, Row, ScrollView } from 'native-base';
 import { TouchableOpacity, View } from 'react-native';
 import { LOGO_STYLES_VIEW  } from '../constants/view-component-styles.js';
 import { LeftIconInput } from '../components/input';

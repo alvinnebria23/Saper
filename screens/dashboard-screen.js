@@ -1,10 +1,10 @@
-import React , { useState }  from 'react';
-import { Text, Center, Heading, Divider, Row, Switch, Column, ScrollView } from 'native-base';
+import React from 'react';
+import { Text, Center, Heading, Divider, Row, Switch, Column } from 'native-base';
 import { View, FlatList } from 'react-native';
 import { DashboardCardView } from '../components/card';
 import { RangeDatePickerModal } from '../components/modal';
 import { DatePickerButton } from '../components/button';
-import { DASHBOARD_CARD_STYLE, EMPTY_DASHBOARD_VALUE, FIVE_PERCENT, TEN_PERCENT } from '../constants/dashboard-constants';
+import { DASHBOARD_CARD_STYLE } from '../constants/dashboard-constants';
 import useDatePicker from '../hooks/useDatePicker';
 import { NoDataFound } from '../components/image';
 import { getNetProfit, getTax } from '../util/CommonUtil';
