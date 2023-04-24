@@ -1,6 +1,6 @@
-export const CLICKTIME = "1";
-export const SUBID = "2";
 
+export const SUBID = "1";
+export const CLICKTIME = "2";
 export const SUBID_SELECT_ITEMS = [
   { label: "Sub ID 1", value: 1 },
   { label: "Sub ID 2", value: 2 },

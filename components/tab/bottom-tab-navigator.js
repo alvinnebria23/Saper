@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Text, Icon, HStack, Center, Pressable, View } from 'native-base';
+import { Text, Icon, HStack, View } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BOTTOM_TAB_NAVIGATOR_OBJECT } from '../../constants/bottom-navigator-constants';
-import useCommon from '../../hooks/useCommon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Animated, Dimensions } from 'react-native';
-
+import { Animated } from 'react-native';
+import { capitalizeFirstLetter } from '../../util/CommonUtil.js';
 const BottomTabNavigator = ({ navigation, onPressTab, selected }) => {
-  const { capitalizeFirstLetter } = useCommon();
   const [animated, setAnimated] = useState(BOTTOM_TAB_NAVIGATOR_OBJECT.map(() => new Animated.Value(1)));
   const [selectedTab, setSelectedTab] = useState(null);
   const fadeIn = (index) => {

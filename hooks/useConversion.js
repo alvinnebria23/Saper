@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
-import { CLICKTIME, DEFAULT_SUBIDS, SUBID } from '../constants/conversion-report-constants';
+import { CLICKTIME, DEFAULT_SUBIDS } from '../constants/conversion-report-constants';
 
 export default useConversion = (conversionReport) => {
   const [selectedSubIds, setSelectedSubIds] = useState(DEFAULT_SUBIDS);
   const [displayType, setDisplayType] = useState('1');
   const [displayData, setDisplayData] = useState([]);
   const [toBeRemoveSubIds, setToBeRemoveSubIds] = useState([]);
-  
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     getFilteredConversionReport();
@@ -20,53 +20,51 @@ export default useConversion = (conversionReport) => {
   useEffect(() => {
     getFilteredConversionReport();
   },[toBeRemoveSubIds])
-
-  const getIndicator = (isExpanded, hasChildrenNodes) => {
-    if (!hasChildrenNodes) {
-      return '-'
-    } else if (isExpanded) {
-      return '-'
-    } else {
-      return '+'
-
-    }
-  }
-  const getTax = (isToggled, grandTotal) => {
-    const taxPercentage = isToggled ? 0.05 : 0.1;
-    return parseFloat(parseFloat(grandTotal) * taxPercentage).toLocaleString();
-  }
-  const getNetProft = (isToggled, grandTotal) => {
-    const taxPercentage = isToggled ? 0.05 : 0.1;
-
-    return parseFloat(grandTotal - (grandTotal * taxPercentage)).toLocaleString();
-  }
   const getFilteredConversionReport = () => {
-    console.log(displayType);
-    if(displayType === SUBID){
+    if (!conversionReport) {
+      return;
+    }
+    if (displayType === CLICKTIME) {
       setDisplayData([]);
       return;
     }
-    else{
-      if(toBeRemoveSubIds.length === 0){
-        setDisplayData(conversionReport);
+    
+  
+    const totalCommission = JSON.parse(JSON.stringify(conversionReport)).reduce((sum, node) => {
+      return sum + (node.level !== 0 ? node.totalCommission : 0);
+    }, 0);
+  
+    const filteredData = JSON.parse(JSON.stringify(conversionReport)).map(node => {
+      const newNode = removeLevels(node, toBeRemoveSubIds);
+      if (newNode.level === 1 && toBeRemoveSubIds.includes(1)) {
+        return newNode.children || [];
+      } else {
+        return newNode;
       }
-      let filteredData = [];
-      let node;
-      for (const conversionNode of conversionReport) {
-        node = removeLevels(conversionNode, toBeRemoveSubIds);
-        if(node.level === 1 && toBeRemoveSubIds.includes(1)){
-          if(node.children && node.children.length > 0){ 
-            for(const childNode of node.children){
-              filteredData.push(childNode); // if level 1 is included, push the child nodes instead.
-            }
-          }
-        }
-        else{
-          filteredData.push(node);
-        }
+    }).flat();
+  
+    const totalFilteredCommission = filteredData.reduce((sum, node) => {
+      return sum + (node.level !== 0 ? node.totalCommission : 0);
+    }, 0);
+  
+    filteredData[filteredData.length - 1].totalCommission += (totalCommission - totalFilteredCommission);
+  
+    const sortedData = [...filteredData].sort((a, b) => {
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      if (nameA < nameB) {
+        return -1;
       }
-      setDisplayData(filteredData);
-    }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+  
+    const blankObject = sortedData.shift();
+    sortedData.push(blankObject);
+  
+    setDisplayData(sortedData);
   }
   
   const removeLevels = (node, levelsToRemove) => {
@@ -88,21 +86,27 @@ export default useConversion = (conversionReport) => {
     return node;
   }
 
-
-  const onClose = () => {
-    setToBeRemoveSubIds(DEFAULT_SUBIDS.filter((item) => !selectedSubIds.includes(item)));
-  };
-
+  const onChange = (type, value) => {
+    if(type === 'radio'){
+      setDisplayType(value);
+    }else{
+      setSelectedSubIds(value);
+    }
+  }
+  const onPress = () => {
+    if(isOpen){
+      setToBeRemoveSubIds(DEFAULT_SUBIDS.filter((item) => !selectedSubIds.includes(item)));
+    }
+    setIsOpen(!isOpen);
+  }
   return {
     selectedSubIds, 
-    setSelectedSubIds, 
-    getIndicator, 
-    getTax, 
-    getNetProft,
     getFilteredConversionReport,
     displayType,
     setDisplayType,
     displayData,
-    onClose
+    onChange,
+    onPress,
+    isOpen
   };
 }

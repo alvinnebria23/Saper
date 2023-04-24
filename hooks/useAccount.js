@@ -1,11 +1,10 @@
 import React , { useState, useContext } from "react";
 import { clearLocalStorage } from "../helpers/storageHelper.js";
 import { UserContext } from "../context";
-import useCommon from "./useCommon.js";
+import { formatName } from "../util/CommonUtil.js";
 export default useAccount = (navigation, setValue) => {
     const [isEditing, setIsEditing] = useState(false);
     const { userData, setuserData } = useContext(UserContext);
-    const { formatName } = useCommon();
 
     const accountInfoFields = [
       { name: 'email', label: 'Email', value: userData.email, iconName: 'email' },

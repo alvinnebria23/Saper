@@ -4,9 +4,10 @@ import { View, FlatList } from 'react-native';
 import { DashboardCardView } from '../components/card';
 import { RangeDatePickerModal } from '../components/modal';
 import { DatePickerButton } from '../components/button';
-import { DASHBOARD_CARD_STYLE, EMPTY_DASHBOARD_VALUE } from '../constants/dashboard-constants';
+import { DASHBOARD_CARD_STYLE, EMPTY_DASHBOARD_VALUE, FIVE_PERCENT, TEN_PERCENT } from '../constants/dashboard-constants';
 import useDatePicker from '../hooks/useDatePicker';
 import { NoDataFound } from '../components/image';
+import { getNetProfit, getTax } from '../util/CommonUtil';
 const DashboardScreen = ({ 
     dashboardFilterDate, 
     setDashboardFilterDate, 
@@ -26,9 +27,11 @@ const DashboardScreen = ({
     const keyExtractor = (item) => item.id;
     const renderItem = ({item}) => {
         return (
-            <View key={item.id} style={{...DASHBOARD_CARD_STYLE.card}}>
-                <DashboardCardView type={item.type} name={item.name} value={item.value} isLoading={isLoading} />
-            </View>
+            <>
+                {!isLoading && <View key={item.id} style={{...DASHBOARD_CARD_STYLE.card}}>
+                    <DashboardCardView type={item.type} name={item.name} value={item.value} isLoading={isLoading} />
+                </View>}
+            </>
         )
     };
     const renderDatePicker = () => {
@@ -51,7 +54,7 @@ const DashboardScreen = ({
                 {topFiveSubIds.map((item, index) => (
                     <Row key={index}>
                             <Text style={{ marginLeft: '2%'}} flex={1} key={index}>{`${index + 1}. ${item.subId}`}</Text>
-                            <Text style={{ right: 0 , position: 'absolute', marginRight: '2%'}} flex={1} key={Math.random()}>&#8369;{` ${parseInt(item.totalCommission).toLocaleString()}`}</Text>
+                            <Text style={{ right: 0 , position: 'absolute', marginRight: '2%'}} flex={1} key={Math.random()}>&#8369;{` ${item.totalCommission.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}</Text>
                     </Row>
                 ))}
             </Column>
@@ -60,32 +63,31 @@ const DashboardScreen = ({
     const renderNetProfit = () => {
         return (
             <Column style={{...DASHBOARD_CARD_STYLE.box, marginBottom: "1%" }}>
+                <Row style={{ alignItems: 'center'}}>
+                    <Text fontSize={12}>B.I.R. Registered</Text>
+                    <Switch size="sm" colorScheme="primary" onTrackColor={'#FF4E00'} onToggle={() => setIsToggled(!isToggled)} isChecked={isToggled} />
+                </Row>
                 <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text fontWeight={'bold'} color={'black'}> 
                         NET PROFIT
-                        <Text fontSize={12} fontWeight={'normal'}>{isToggled ? '( less 5% )' : '( less 10% )'}</Text>
+                        <Text 
+                            fontSize={12} 
+                            fontWeight={'normal'}
+                        >
+                            {`${isToggled ? '[ less 5%' : '[ less 10%'} ( ${getTax(isToggled, dashboardData[0]?.value)} ) ]`}
+                        </Text>
                     </Text>
-                    <Row style={{ alignItems: 'center'}}>
-                        <Text fontSize={12}>B.I.R. Registered</Text>
-                        <Switch size="sm" colorScheme="primary" onTrackColor={'#FF4E00'} onToggle={() => setIsToggled(!isToggled)} isChecked={isToggled} />
-                    </Row>
                 </Row>
                 <Divider />
                 <Row p={'2%'}>
                     <Text style={{fontSize: 12, lineHeight: 18, color: '#FF4E00'}}>&#8369;</Text>
                     <Heading size={'md'}>
-                    {!isLoading && dashboardData[0]?.value ? displayNetProfit() : '0'}
+                    {!isLoading && dashboardData[0]?.value ? getNetProfit(isToggled, dashboardData[0]?.value) : '0'}
                     </Heading>
                 </Row>
             </Column>
           );
     };
-    const displayNetProfit = () => {
-        const totalCommission = dashboardData[0]?.value;
-        const tax = isToggled ? totalCommission * 0.05 : totalCommission * 0.1;
-        const netProft =  totalCommission - tax;
-        return parseFloat(netProft).toLocaleString();
-    }
     return (
         <>
             {renderDatePicker()}
@@ -101,7 +103,7 @@ const DashboardScreen = ({
                     />
                     {dashboardData.length ? 
                         <FlatList
-                            data={isLoading ? EMPTY_DASHBOARD_VALUE : dashboardData}
+                            data={dashboardData}
                             renderItem={renderItem}
                             keyExtractor={keyExtractor}
                             numColumns={2}
@@ -111,7 +113,7 @@ const DashboardScreen = ({
                                     {!isLoading && renderSubIds()}
                                 </View>
                             }
-                        /> : <NoDataFound />}
+                        /> : !isLoading && <NoDataFound />}
                 </View>
             </View>
         </>

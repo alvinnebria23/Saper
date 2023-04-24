@@ -2,10 +2,10 @@ import React from 'react';
 import { View } from 'react-native';
 import useAccount from '../hooks/useAccount.js';
 import { Avatar, Center, Heading,Row, ScrollView, Text } from 'native-base';
-import useCommon from '../hooks/useCommon.js';
 import DetailCard from '../components/card/detail-card.js';
 import LinkButton from '../components/button/LinkButton.js';
 import { useForm, Controller } from 'react-hook-form';
+import { formatName } from '../util/CommonUtil.js';
 const AccountScreen =  ({ navigation }) => {
   const { control, setValue } = useForm();
   const { 
@@ -16,10 +16,9 @@ const AccountScreen =  ({ navigation }) => {
     onPress,
     isEditing,
   } = useAccount(navigation, setValue);
-  const { formatName } = useCommon();
   return (
     <ScrollView style={{ flex: 1 }}>
-      <View style={{ marginTop: "30%"}}>
+      <View style={{ marginTop: "10%"}}>
         <Center>
           <Avatar size={'xl'} bg="#FF4E00" mb={2}>
               {userData.name[0].toUpperCase()}

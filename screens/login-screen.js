@@ -8,12 +8,11 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { ImageLogo } from '../components/image';
 import { UserContext } from '../context';
+import { onPressNavigate } from '../util/CommonUtil.js';
 import useLogin from '../hooks/useLogin';
-import useCommon from '../hooks/useCommon';
 const LoginScreen = ({ navigation }) => {
     const { userData, setUserData } = useContext(UserContext);
     const { onSubmit, onPressShowPassword, showPassword, isLoading , status} = useLogin(setUserData);
-    const { onPressNavigate } = useCommon();
     const { control, handleSubmit } = useForm();
 
     useEffect(() => {

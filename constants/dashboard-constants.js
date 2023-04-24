@@ -55,3 +55,5 @@ export const YESTERDAY = 1;
 export const SEVEN_DAYS_AGO = 7;
 export const THIRTY_DAYS_AGO = 30;
 export const NINETY_DAYS_AGO = 90;
+export const TEN_PERCENT = 0.1;
+export const FIVE_PERCENT = 0.05;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Heading, Text } from 'native-base';
+import { Heading, Row, Text } from 'native-base';
 
 const TwoColumnLabel = ({ 
   type = 'heading', 
@@ -8,25 +8,24 @@ const TwoColumnLabel = ({
   leftLabel, 
   rightLabel, 
   leftLabelStyle = { alignSelf: 'flex-start' }, 
-  rightLabelStyle = { alignSelf: 'flex-end', marginLeft: 10 },
+  rightLabelStyle = { alignSelf: 'flex-end' },
 }) => {
   return (
     <>
       {type === 'heading' ? 
-      <>
-        <View style={{ flex: 1 }}>
-          <Heading size={'sm'} style={{ ...leftLabelStyle }}>
-            {leftLabel}
-          </Heading>
-        </View>
-        <View style={{ flex: 0 }}>
-          <Heading size={'sm'} style={{ ...rightLabelStyle }}>
-            {rightLabel}
-          </Heading>
-        </View>
-      </>
-          :
-      <>
+        <Row alignItems={'center'}>
+          <View style={{ flex: 1 }}>
+            <Heading size={'sm'} style={{ ...leftLabelStyle }}>
+              {leftLabel}
+            </Heading>
+          </View>
+          <View style={{ flex: 0 }}>
+            <Heading size={'sm'} style={{ ...rightLabelStyle }}>
+              {rightLabel}
+            </Heading>
+          </View>
+        </Row> :
+      <Row>
         <View style={{ flex: 1 }}>
           <Text style={{ ...leftLabelStyle, fontSize: fontSize }}>
             {leftLabel}
@@ -37,7 +36,7 @@ const TwoColumnLabel = ({
             {rightLabel}
           </Text>
         </View>
-      </>}
+      </Row>}
     </>
 )
 };
