@@ -30,6 +30,8 @@ const HomeScreen = ({ navigation }) => {
     conversionData,
     isToggled,
     setIsToggled,
+    displayType,
+    setDisplayType,
   } = useHome();
   const renderSelectedScreen = () => {
     switch(selected){
@@ -46,17 +48,17 @@ const HomeScreen = ({ navigation }) => {
           />
         );
       case 1:
-        return (<>
-          {!isLoading && 
-          <ConversionReportScreen 
-              conversionData={conversionData}
-              conversionFilterDate={conversionFilterDate}
-              setConversionFilterDate={setConversionFilterDate}
-              isToggled={isToggled}
-              setIsToggled={setIsToggled}
-              isLoading={isLoading}
-            />}
-          </>
+        return (
+        <ConversionReportScreen 
+          conversionData={conversionData}
+          conversionFilterDate={conversionFilterDate}
+          setConversionFilterDate={setConversionFilterDate}
+          isToggled={isToggled}
+          setIsToggled={setIsToggled}
+          isLoading={isLoading}
+          displayType={displayType}
+          setDisplayType={setDisplayType}
+        />
         );
       case 2:
         return (<ClickReportScreen />);

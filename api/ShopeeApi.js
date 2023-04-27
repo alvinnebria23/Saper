@@ -30,10 +30,25 @@ const getDashboardReport = async (filter) => {
     }
 }
 
-const getConversionReport = async (filter) => {
+const getSubIdTree = async (filter) => {
     try {
         const { appId, secretKey } = await retrieveLocalStorage('userData');
-        const response = await axios.post(`${HOST}/api/v1/shopee/conversion`, {
+        const response = await axios.post(`${HOST}/api/v1/shopee/subIdTree`, {
+            appId: appId,
+            secretKey: secretKey,
+            parameters: filter,
+        });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return { error: true, message: "Please do filtering dates every 30 seconds only."};
+    }
+}
+
+const getClickTimeTree = async (filter) => {
+    try {
+        const { appId, secretKey } = await retrieveLocalStorage('userData');
+        const response = await axios.post(`${HOST}/api/v1/shopee/clickTimeTree`, {
             appId: appId,
             secretKey: secretKey,
             parameters: filter,
@@ -48,6 +63,7 @@ const getConversionReport = async (filter) => {
 const getInitialData = async (filter) => {
     try {
         const { appId, secretKey } = await retrieveLocalStorage('userData');
+        console.log(appId);
         const response = await axios.post(`${HOST}/api/v1/shopee/initial`, {
             appId: appId,
             secretKey: secretKey,
@@ -59,4 +75,4 @@ const getInitialData = async (filter) => {
         return { error: true, message: "Please do filtering dates every 30 seconds only."};
     }
 }
-export { checkApi, getDashboardReport, getConversionReport, getInitialData };
+export { checkApi, getDashboardReport, getSubIdTree, getClickTimeTree, getInitialData };

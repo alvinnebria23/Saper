@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
-import { getConversionReport, getDashboardReport, getInitialData } from '../api/ShopeeApi';
+import { getClickTimeTree, getDashboardReport, getInitialData, getSubIdTree } from '../api/ShopeeApi';
 import { getDefaultFilter } from '../util/DateUtil';
+import { SUBID } from '../constants/conversion-report-constants';
 export default useHome = () => {
     const [status, setStatus] = useState({});
     const [dashboardData, setDashboardData] = useState([]);
@@ -12,6 +13,8 @@ export default useHome = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialRender, setIsInitialRender] = useState(true);
     const [isToggled, setIsToggled] = useState(false);
+    const [displayType, setDisplayType] = useState('1');
+
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
@@ -72,11 +75,17 @@ export default useHome = () => {
             console.log('conversion');
             const fetchData = async () => {
                 setIsLoading(true);
-                const data = await getConversionReport(`
+                let data;
+                const parameters = `
                     purchaseTimeStart:${conversionFilterDate.startDate.unixtimestamp}, 
                     purchaseTimeEnd:${conversionFilterDate.endDate.unixtimestamp}, 
                     limit:500
-                `);
+                `;
+                if(displayType === SUBID){
+                    data = await getSubIdTree(parameters);
+                } else {
+                    data = await getClickTimeTree(parameters);
+                }
                 if(data?.errors){
                     const status = {
                         header: 'Conversion Report Error message',
@@ -93,7 +102,8 @@ export default useHome = () => {
             fetchData();
         }
         setIsInitialRender(false);
-    }, [conversionFilterDate]);
+    }, [conversionFilterDate, displayType]);
+
       
 
     const onCloseDialog = () => {
@@ -116,5 +126,7 @@ export default useHome = () => {
         isToggled,
         setIsToggled,
         isLoading,
+        displayType,
+        setDisplayType,
     }
 }

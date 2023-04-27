@@ -2,30 +2,22 @@
 import React, { useEffect, useState } from 'react';
 import { CLICKTIME, DEFAULT_SUBIDS } from '../constants/conversion-report-constants';
 
-export default useConversion = (conversionReport) => {
+export default useConversion = (conversionReport, displayType, setDisplayType) => {
   const [selectedSubIds, setSelectedSubIds] = useState(DEFAULT_SUBIDS);
-  const [displayType, setDisplayType] = useState('1');
   const [displayData, setDisplayData] = useState([]);
   const [toBeRemoveSubIds, setToBeRemoveSubIds] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     getFilteredConversionReport();
-  },[conversionReport])
+  },[conversionReport, toBeRemoveSubIds])
 
-  useEffect(() => {
-    getFilteredConversionReport();
-  },[displayType])
-
-  useEffect(() => {
-    getFilteredConversionReport();
-  },[toBeRemoveSubIds])
   const getFilteredConversionReport = () => {
     if (!conversionReport) {
       return;
     }
     if (displayType === CLICKTIME) {
-      setDisplayData([]);
+      setDisplayData(conversionReport);
       return;
     }
     
@@ -102,7 +94,6 @@ export default useConversion = (conversionReport) => {
   return {
     selectedSubIds, 
     getFilteredConversionReport,
-    displayType,
     setDisplayType,
     displayData,
     onChange,

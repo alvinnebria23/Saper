@@ -10,7 +10,7 @@ import { NoDataFound } from '../components/image';
 import { TwoColumnLabel } from '../components/label';
 import { AntDesign } from '@expo/vector-icons';
 import useConversion from '../hooks/useConversion';
-import { SUBID, SUBID_SELECT_ITEMS } from '../constants/conversion-report-constants';
+import { CLICKTIME, SUBID, SUBID_SELECT_ITEMS } from '../constants/conversion-report-constants';
 import { getTax, getNetProfit } from '../util/CommonUtil.js';
 const ConversionReportScreen =  ({ 
   conversionData,
@@ -19,6 +19,8 @@ const ConversionReportScreen =  ({
   isToggled,
   setIsToggled,
   isLoading,
+  displayType,
+  setDisplayType,
 }) => {
   const {
     showDatePicker, 
@@ -30,11 +32,10 @@ const ConversionReportScreen =  ({
   const {
     selectedSubIds,
     displayData,
-    displayType,
     onChange,
     onPress,
     isOpen
-  } = useConversion(conversionData?.conversionReport);
+  } = useConversion(conversionData?.conversionReport, displayType, setDisplayType);
   const renderDatePicker = () => {
     return (
       <RangeDatePickerModal 
@@ -60,17 +61,18 @@ const ConversionReportScreen =  ({
   const getIndicator = (isExpanded, hasChildrenNodes, level) => {
     if (!hasChildrenNodes) {
       return (
-        <View style={{ marginLeft: level * 25}}>
+        <View>
+          {displayType === SUBID ? 
           <Icon 
-            size={4}
-            alignSelf={'center'} 
-            color={'black'}
-            as={<AntDesign  name={'minus'} />} />
-        </View>
-      )
+          size={4}
+          alignSelf={'center'} 
+          color={'black'}
+          as={<AntDesign  name={displayType === CLICKTIME ? 'clockcircleo' : 'minus'} />} /> :
+          <Text>:</Text>}
+        </View>)
     } else if (isExpanded) {
       return (
-        <View style={{ marginLeft: level * 25}}>
+        <View>
           <Icon 
             size={4}
             alignSelf={'center'} 
@@ -80,7 +82,7 @@ const ConversionReportScreen =  ({
       )
     } else {
       return (
-        <View style={{ marginLeft: level * 25}}>
+        <View>
           <Icon 
             size={4}
             alignSelf={'center'} 
@@ -102,7 +104,6 @@ const ConversionReportScreen =  ({
             startDateText={conversionFilterDate.startDate.text} 
             endDateText={conversionFilterDate.endDate.text}
         />
-        {conversionData?.conversionReport?.length ? 
         <ScrollView style={{ flex: 2, marginBottom: "20%" }}>
           <Row style={{ alignItems: 'center', alignSelf: 'flex-end' }}>
             <Text fontSize={12}>B.I.R. Registered</Text>
@@ -141,7 +142,7 @@ const ConversionReportScreen =  ({
               </Radio>
             </Radio.Group>
           </Row>
-          <Column style={{...DASHBOARD_CARD_STYLE.box, 
+          {!isLoading && displayData?.length ? <Column style={{...DASHBOARD_CARD_STYLE.box, 
             marginBottom: "1%", 
             paddingLeft: '4%', 
             paddingRight: '6%',
@@ -155,14 +156,15 @@ const ConversionReportScreen =  ({
               rightLabel={'Total Commission'} 
             />
             <TreeView
-              data={!isLoading ? displayData : []} 
+              data={displayData} 
               renderNode={({ node, level, isExpanded, hasChildrenNodes }) => {
                 return (
                   <Row 
                     key={node.name}
                     style={{ 
                       alignItems: 'center', 
-                      paddingRight: '5%',
+                      paddingRight: level === 3 ? 13.5 : 25,
+                      paddingLeft: 25 * level,
                       marginBottom: '1%',
                     }}>
                     {getIndicator(isExpanded, hasChildrenNodes, level)}
@@ -171,7 +173,6 @@ const ConversionReportScreen =  ({
                         fontSize={15}
                         leftLabel={` ${node.name}`}
                         rightLabel={node.totalCommission?.toLocaleString() || 0 }
-                        rightLabelStyle={{ paddingRight: 25 * level  }}
                       />
                   </Row>
                 )
@@ -181,7 +182,7 @@ const ConversionReportScreen =  ({
                 leftLabelStyle={{ marginTop: '5%', marginLeft: '2%' }}
                 rightLabelStyle={{ marginTop: '5%' }}
                 leftLabel={'Grand Total'} 
-                rightLabel={conversionData.grandTotal.toLocaleString()}
+                rightLabel={conversionData.grandTotal?.toLocaleString()}
               />
               <TwoColumnLabel 
                 type='text'
@@ -195,8 +196,8 @@ const ConversionReportScreen =  ({
                 leftLabelStyle={{ marginLeft: '2%' }}
                 rightLabel={getNetProfit(isToggled, conversionData.grandTotal)}
               />
-          </Column>
-          </ScrollView> : < NoDataFound />}
+          </Column> : !isLoading && <NoDataFound screenType={'conversionReport'}/>}
+          </ScrollView>
     </View>
 </View>
   );
