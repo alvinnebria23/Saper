@@ -36,16 +36,6 @@ const ConversionReportScreen =  ({
     onPress,
     isOpen
   } = useConversion(conversionData?.conversionReport, displayType, setDisplayType);
-  const renderDatePicker = () => {
-    return (
-      <RangeDatePickerModal 
-          showDatePicker={showDatePicker} 
-          onRequestClose={onRequestClose}
-          onSelectDateRange={onSelectDateRange}
-          dateRange={dateFilter}
-      />
-    )
-  };
   const triggerProps = (props) => {
     return (<Button 
               {...props}
@@ -94,7 +84,12 @@ const ConversionReportScreen =  ({
   }
   return (
     <View bg="white" width="100%" height={'100%'}>
-    {renderDatePicker()}
+    <RangeDatePickerModal 
+          showDatePicker={showDatePicker} 
+          onRequestClose={onRequestClose}
+          onSelectDateRange={onSelectDateRange}
+          dateRange={dateFilter}
+      />
     <View>
         <Heading ml='5%' mt='5%' mb={'4%'} size='md' color={'primary.50'}>Conversion Report</Heading>
     </View>
@@ -111,10 +106,10 @@ const ConversionReportScreen =  ({
           </Row>
           <Row style={{ ...DASHBOARD_CARD_STYLE.box, padding: '2%' }}>
             <Radio.Group 
-              name="myRadioGroup" 
+              name="displayTypeRadioGroup" 
               accessibilityLabel="Pick your favorite number"
               onChange={onChange.bind(this, 'radio')}
-              defaultValue='1'
+              defaultValue={displayType}
             >
               <Radio value="1" my={1} size="sm" colorScheme={'warning'} alignItems={'center'}>
                 <Text fontSize={12}>Sub-ID</Text>
@@ -150,8 +145,8 @@ const ConversionReportScreen =  ({
             paddingBottom: '7%',
           }}>
             <TwoColumnLabel 
-              leftLabelStyle={{ marginBottom: '5%', marginLeft: '1%' }}
-              rightLabelStyle={{ marginBottom: '5%' }}
+              leftLabelStyle={{ marginBottom: '5%', fontSize: 15, fontWeight: 'bold' }}
+              rightLabelStyle={{ marginBottom: '5%', fontSize: 15, fontWeight: 'bold'  }}
               leftLabel={'Description'} 
               rightLabel={'Total Commission'} 
             />
@@ -164,28 +159,26 @@ const ConversionReportScreen =  ({
                     style={{ 
                       alignItems: 'center', 
                       paddingRight: level === 3 ? 13.5 : 25,
-                      paddingLeft: 25 * level,
+                      paddingLeft: 10 * level,
                       marginBottom: '1%',
                     }}>
                     {getIndicator(isExpanded, hasChildrenNodes, level)}
                       <TwoColumnLabel 
-                        type='text'
                         fontSize={15}
                         leftLabel={` ${node.name}`}
-                        rightLabel={node.totalCommission?.toLocaleString() || 0 }
+                        rightLabel={node.totalCommission.toLocaleString(undefined, { maximumFractionDigits: 5 }) || 0 }
                       />
                   </Row>
                 )
               }}
             /> 
               <TwoColumnLabel 
-                leftLabelStyle={{ marginTop: '5%', marginLeft: '2%' }}
-                rightLabelStyle={{ marginTop: '5%' }}
+                leftLabelStyle={{ marginTop: '5%', marginLeft: '2%', fontWeight: 'bold' }}
+                rightLabelStyle={{ marginTop: '5%', fontWeight: 'bold' }}
                 leftLabel={'Grand Total'} 
-                rightLabel={conversionData.grandTotal?.toLocaleString()}
+                rightLabel={conversionData.grandTotal?.toLocaleString(undefined, { maximumFractionDigits: 5 })}
               />
               <TwoColumnLabel 
-                type='text'
                 fontSize={13}
                 leftLabel={`${isToggled ? '(5%)' : '(10%)'} Tax`} 
                 leftLabelStyle={{ marginLeft: '2%' }}
@@ -193,7 +186,8 @@ const ConversionReportScreen =  ({
               />
               <TwoColumnLabel 
                 leftLabel={`Net Proft`} 
-                leftLabelStyle={{ marginLeft: '2%' }}
+                leftLabelStyle={{ marginLeft: '2%', fontWeight: 'bold' }}
+                rightLabelStyle={{ fontWeight: 'bold' }}
                 rightLabel={getNetProfit(isToggled, conversionData.grandTotal)}
               />
           </Column> : !isLoading && <NoDataFound screenType={'conversionReport'}/>}

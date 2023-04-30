@@ -19,10 +19,10 @@ export const formatName = (value) => {
 };
 export const getTax = (isToggled, grandTotal) => {
     const taxPercentage = isToggled ? FIVE_PERCENT : TEN_PERCENT;
-    return parseFloat(grandTotal * taxPercentage).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});;
+    return parseFloat(grandTotal * taxPercentage).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 5});;
 }
 export const getNetProfit = (isToggled, grandTotal) => {
     const taxPercentage = isToggled ? FIVE_PERCENT : TEN_PERCENT;
 
-    return parseFloat(grandTotal - (grandTotal * taxPercentage)).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});;
+    return parseFloat(grandTotal - (grandTotal * taxPercentage)).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 5});;
 }

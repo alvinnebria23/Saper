@@ -20,8 +20,7 @@ export default useConversion = (conversionReport, displayType, setDisplayType) =
       setDisplayData(conversionReport);
       return;
     }
-    
-  
+
     const totalCommission = JSON.parse(JSON.stringify(conversionReport)).reduce((sum, node) => {
       return sum + (node.level !== 0 ? node.totalCommission : 0);
     }, 0);

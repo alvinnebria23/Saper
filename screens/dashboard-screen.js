@@ -34,16 +34,6 @@ const DashboardScreen = ({
             </>
         )
     };
-    const renderDatePicker = () => {
-        return (
-            <RangeDatePickerModal 
-                showDatePicker={showDatePicker} 
-                onRequestClose={onRequestClose}
-                onSelectDateRange={onSelectDateRange}
-                dateRange={dateFilter}
-            />
-        )
-    };
     const renderSubIds = () => {
         return (
             <Column style={{ ...DASHBOARD_CARD_STYLE.box, marginBottom: "17%" }}>
@@ -90,7 +80,12 @@ const DashboardScreen = ({
     };
     return (
         <>
-            {renderDatePicker()}
+            <RangeDatePickerModal 
+                showDatePicker={showDatePicker} 
+                onRequestClose={onRequestClose}
+                onSelectDateRange={onSelectDateRange}
+                dateRange={dateFilter}
+            />
             <View width="100%" height={'100%'}>
                 <View>
                     <Heading ml='5%' mt='5%' mb={'4%'} size='md' color={'primary.50'}>Dashboard</Heading>
