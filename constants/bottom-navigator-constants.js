@@ -10,6 +10,11 @@ export const BOTTOM_TAB_NAVIGATOR_OBJECT = [
         selectedIconName: 'file-document',
     },
     {
+        name:'link',
+        iconName:'link-variant',
+        selectedIconName: 'link-variant',
+    },
+    {
         name:'click',
         iconName:'cursor-default-click-outline',
         selectedIconName: 'cursor-default-click',

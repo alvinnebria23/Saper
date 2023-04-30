@@ -11,6 +11,7 @@ import useHome from '../hooks/useHome.js';
 import { useRef } from 'react';
 import AccountScreen from './account-screen';
 import ConversionReportScreen from './conversion-report-screen';
+import GenerateLinkScreen from "./generate-link-screen"
 const HomeScreen = ({ navigation }) => {
   const { 
     selected, 
@@ -61,8 +62,10 @@ const HomeScreen = ({ navigation }) => {
         />
         );
       case 2:
-        return (<ClickReportScreen />);
+        return (<GenerateLinkScreen />);
       case 3:
+        return (<ClickReportScreen />);
+      case 4:
         return (<AccountScreen navigation={navigation} />);
       default:
         return;
