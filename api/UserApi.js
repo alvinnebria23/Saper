@@ -14,6 +14,7 @@ const registerUser = async (user) => {
 
 const loginUser = async (user) => {
     try {
+        console.log(HOST);
         const response =  await axios.post(`${HOST}/api/v1/user/loginUser`, {
             user
         });
