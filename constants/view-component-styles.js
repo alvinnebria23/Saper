@@ -36,3 +36,18 @@ export const BOTTOM_VIEW = {
     justifyContent: "flex-end",
     alignItems: "center",
 };
+
+export const CARD_VIEW = {
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    shadowOpacity: 0.26,
+    elevation: 8,
+    borderColor: 'gray',
+    borderRadius: 10,
+    elevation: 2,
+    backgroundColor: '#f6f7f9',
+    padding: 10,
+    margin: '1%',
+    flex: 2,
+  };

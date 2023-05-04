@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, useWindowDimensions } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { 
@@ -15,16 +15,19 @@ import {
   IconButton, 
   InputGroup, 
   InputLeftAddon,
-  Modal,  
+  Modal,
+  Divider,  
 } from 'native-base';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Controller, useForm } from 'react-hook-form';
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { DEFAULT_SUBIDS } from '../constants/conversion-report-constants';
-import { generateAndSaveLink } from '../api/LinkApi';
+import { generateAndSaveLink, retrieveGeneratedLinks } from '../api/LinkApi';
+import { CARD_VIEW } from '../constants/view-component-styles.js';
+import { formatDateToString } from '../util/DateUtil';
 
 
-const GenerateLinkScreen =  ({ navigation }) => {
+const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [originalUrl, setOriginalUrl] = useState([]);
@@ -32,11 +35,21 @@ const GenerateLinkScreen =  ({ navigation }) => {
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [generatedLinks, setGeneratedLinks] = useState([]);
+  const [retrievedLinks, setRetrievedLinks] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [routes] = useState([
     { key: 'first', title: 'Convert' },
     { key: 'second', title: 'History' },
   ]);
+
+  useEffect(() => {
+    const retrieveLinks = async () => {
+      setIsLoading(true);
+      setRetrievedLinks(await retrieveGeneratedLinks());
+      setIsLoading(false);
+    };
+    retrieveLinks();
+  }, [])
 
   const { control, setValue } = useForm();
   
@@ -80,10 +93,12 @@ const GenerateLinkScreen =  ({ navigation }) => {
       setErrorMessage('Please input 1 - 5 shopee links only.')
       return;
     }
+    setIsLoading(true);
     for(const link of originalUrl){
       if(!link.startsWith('https://shopee.ph/') && !link.startsWith('https://shopee.ee/')){
         setIsError(true);
         setErrorMessage('Please input valid shopee link.');
+        setIsLoading(false);
         return;
       }
     }
@@ -96,6 +111,11 @@ const GenerateLinkScreen =  ({ navigation }) => {
     setGeneratedLinks(response.shopeeLinks);
     setModalVisible(true);
     setIsError(false);
+    setIsLoading(false);
+  }
+  const onPressCopyAll = () => {
+    Clipboard.setStringAsync(generatedLinks.join(`\n`));
+    setModalVisible(false);
   }
   const ConvertRoute = () => (
     <KeyboardAvoidingView style={{ flex: 1, marginRight: '5%', marginLeft: '5%' }}>
@@ -214,7 +234,44 @@ const GenerateLinkScreen =  ({ navigation }) => {
   );
   
   const HistoryRoute = () => (
-    <View style={{ flex: 1, backgroundColor: '#673ab7' }} />
+    <Column style={{ flex: 1, marginBottom: '20%' }}>
+      <View style= {{ marginRight: '5%', marginLeft: '5%' }}>
+      <Input 
+        variant="outline" 
+        placeholder="Search link name" 
+        mt={'5%'}
+        mb={'5%'}
+        InputLeftElement={<Icon as={AntDesign} name="search1" size={'md'} ml={'5%'} />}
+      />
+      </View>
+      <ScrollView>
+        {retrievedLinks?.length > 0 && retrievedLinks.map((link) => (
+          <Row style={CARD_VIEW} key={link?.name}>
+              <Column flex={1}>
+                <Text fontWeight={'semibold'}>{link?.name}</Text>
+                <Text fontWeight={'light'} style={{ fontSize: 12 }}>{link?.shortLink}</Text>
+                <Text style={{ fontSize: 10, marginTop: '5%', color: 'green' }}> 
+                  Created at: {formatDateToString(new Date(link?.createdAt))}
+                </Text>
+              </Column>
+              <Row flex={0} alignItems={'center'} margin={0}>
+                <View>
+                  <IconButton colorScheme="gray" key={'delete'} size={'sm'} variant={'ghost'} _icon={{
+                    as: AntDesign,
+                    name: "delete"
+                  }} />
+                </View>
+                <View>
+                  <IconButton colorScheme="gray" key={'copy'} size={'sm'} variant={'ghost'} _icon={{
+                    as: AntDesign,
+                    name: "copy1"
+                  }} />
+                </View>
+              </Row>
+          </Row>
+        ))}
+      </ScrollView>
+    </Column>
   );
   
   const renderScene = SceneMap({
@@ -246,15 +303,12 @@ const GenerateLinkScreen =  ({ navigation }) => {
               width={'100%'}
               padding={0}
               fontSize={10}
-              isDisabled={true}
               value={generatedLinks.join(`\n`)}
             />
           </Modal.Body>
           <Modal.Footer>
-            <Button colorScheme={'orange'} flex="1" onPress={() => {
-            setModalVisible(false);
-            }}>
-              Share
+            <Button colorScheme={'orange'} flex="1" onPress={onPressCopyAll}>
+              Copy All
             </Button>
           </Modal.Footer>
         </Modal.Content>

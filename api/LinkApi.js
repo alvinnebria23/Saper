@@ -16,4 +16,16 @@ const generateAndSaveLink = async (originalUrl, subIds) => {
         return false;
     }
 }
-export { generateAndSaveLink };
+
+const retrieveGeneratedLinks = async () => {
+    try {
+        const { id } = await retrieveLocalStorage('userData');
+        const response =  await axios.post(`${HOST}/api/v1/link/retrieveGeneratedLinks`, { userId: id });
+        return response?.data?.shopeeLinks;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export { generateAndSaveLink, retrieveGeneratedLinks };

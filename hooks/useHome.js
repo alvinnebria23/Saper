@@ -128,5 +128,6 @@ export default useHome = () => {
         isLoading,
         displayType,
         setDisplayType,
+        setIsLoading,
     }
 }

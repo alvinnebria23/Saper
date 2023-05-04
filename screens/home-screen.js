@@ -33,6 +33,7 @@ const HomeScreen = ({ navigation }) => {
     setIsToggled,
     displayType,
     setDisplayType,
+    setIsLoading,
   } = useHome();
   const renderSelectedScreen = () => {
     switch(selected){
@@ -62,7 +63,7 @@ const HomeScreen = ({ navigation }) => {
         />
         );
       case 2:
-        return (<GenerateLinkScreen />);
+        return (<GenerateLinkScreen setIsLoading={setIsLoading} />);
       case 3:
         return (<ClickReportScreen />);
       case 4:
