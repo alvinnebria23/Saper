@@ -42,9 +42,21 @@ const DashboardScreen = ({
                     <Divider m={1}/>
                 </Center>
                 {topFiveSubIds.map((item, index) => (
-                    <Row key={index}>
-                            <Text style={{ marginLeft: '2%'}} flex={1} key={index}>{`${index + 1}. ${item.subId}`}</Text>
-                            <Text style={{ right: 0 , position: 'absolute', marginRight: '2%'}} flex={1} key={Math.random()}>&#8369;{` ${item.totalCommission.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}</Text>
+                    <Row key={index} mb={'3%'}>
+                        <Text 
+                            style={{ marginLeft: '2%', flexWrap: 'wrap', maxWidth: '50%' }} 
+                            flex={1} 
+                            key={index + 10}
+                        >
+                            {`${index + 1})${item.subId}`}
+                        </Text>
+                        <Text 
+                            style={{ right: 0 , position: 'absolute', marginRight: '2%' }} 
+                            flex={1} 
+                            key={index + 20}
+                        >
+                            &#8369;{` ${item.totalCommission.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
+                        </Text>
                     </Row>
                 ))}
             </Column>
@@ -102,6 +114,7 @@ const DashboardScreen = ({
                             renderItem={renderItem}
                             keyExtractor={keyExtractor}
                             numColumns={2}
+                            showsVerticalScrollIndicator={false}
                             ListFooterComponent={                   
                                 <View style={{ height: 'auto', marginBottom: '5%' }}>
                                     {!isLoading && renderNetProfit()}

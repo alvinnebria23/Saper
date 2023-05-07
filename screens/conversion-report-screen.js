@@ -51,34 +51,30 @@ const ConversionReportScreen =  ({
   const getIndicator = (isExpanded, hasChildrenNodes, level) => {
     if (!hasChildrenNodes) {
       return (
-        <View>
+        <>
           {displayType === SUBID ? 
           <Icon 
           size={4}
-          alignSelf={'center'} 
           color={'black'}
+          mt={1}
           as={<AntDesign  name={displayType === CLICKTIME ? 'clockcircleo' : 'minus'} />} /> :
           <Text>:</Text>}
-        </View>)
+        </>)
     } else if (isExpanded) {
       return (
-        <View>
           <Icon 
             size={4}
-            alignSelf={'center'} 
             color={'black'}
+            mt={1}
             as={<AntDesign  name={'minus'} />} />
-        </View>
       )
     } else {
       return (
-        <View>
           <Icon 
             size={4}
-            alignSelf={'center'} 
             color={'#FF4E00'}
+            mt={1}
             as={<AntDesign  name={'pluscircle'} />} />
-        </View>
       )
     }
   }
@@ -99,7 +95,7 @@ const ConversionReportScreen =  ({
             startDateText={conversionFilterDate.startDate.text} 
             endDateText={conversionFilterDate.endDate.text}
         />
-        <ScrollView style={{ flex: 2, marginBottom: "20%" }}>
+        <ScrollView style={{ flex: 2, marginBottom: "20%" }} showsVerticalScrollIndicator={false}>
           <Row style={{ alignItems: 'center', alignSelf: 'flex-end' }}>
             <Text fontSize={12}>B.I.R. Registered</Text>
             <Switch size="sm" colorScheme="primary" onTrackColor={'#FF4E00'} onToggle={() => setIsToggled(!isToggled)} isChecked={isToggled} />
@@ -157,17 +153,23 @@ const ConversionReportScreen =  ({
                   <Row 
                     key={node.name}
                     style={{ 
-                      alignItems: 'center', 
                       paddingRight: level === 3 ? 13.5 : 25,
                       paddingLeft: 10 * level,
                       marginBottom: '1%',
                     }}>
-                    {getIndicator(isExpanded, hasChildrenNodes, level)}
-                      <TwoColumnLabel 
-                        fontSize={15}
-                        leftLabel={` ${node.name}`}
-                        rightLabel={node.totalCommission.toLocaleString(undefined, { maximumFractionDigits: 5 }) || 0 }
-                      />
+                      <View style={{ flex: 1, flexWrap: 'wrap', maxWidth: '50%', alignSelf: 'flex-start' }}>
+                        <Row>
+                          {getIndicator(isExpanded, hasChildrenNodes, level)}
+                          <Text>
+                            {node.name}
+                          </Text>
+                        </Row>
+                      </View>
+                      <View style={{ position: 'absolute', right: 0 }}>
+                        <Text>
+                          {node.totalCommission.toLocaleString(undefined, { maximumFractionDigits: 5 }) || 0 }
+                        </Text>
+                      </View>
                   </Row>
                 )
               }}

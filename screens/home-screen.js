@@ -75,7 +75,7 @@ const HomeScreen = ({ navigation }) => {
   const cancelRef = useRef(null);
   return (
     <View flex={1} style={{ backgroundColor: 'white'}} pointerEvents={isLoading ? 'none' : 'auto'}>
-      {isLoading && <CustomModalSpinner message={'Fetching data, please wait . . .'} />}
+      {isLoading && <CustomModalSpinner message={'Processing, please wait . . .'} />}
       <AlertDialogComponent 
         cancelRef={cancelRef}
         isOpen={status?.isOpen}
@@ -88,12 +88,12 @@ const HomeScreen = ({ navigation }) => {
           </Button>
         )}
       />
-      <View flex={1} style={{ marginTop: "5%" }}>
+      <View flex={1}>
           {renderSelectedScreen()}
       </View>
-      <Box bg={'white'} style={{ position: 'absolute', bottom: 0 }} width="100%" alignSelf="center">
+      <View bg={'white'} style={{ position: 'absolute', bottom: 0 }} width="100%" alignSelf="center">
         <BottomTabNavigator selected={selected} onPressTab={onPressTab} setSelected={setSelected} />
-      </Box>
+      </View>
     </View>
   );
 };

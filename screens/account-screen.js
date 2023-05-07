@@ -17,7 +17,7 @@ const AccountScreen =  ({ navigation }) => {
     isEditing,
   } = useAccount(navigation, setValue);
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
       <View style={{ marginTop: "10%"}}>
         <Center>
           <Avatar size={'xl'} bg="#FF4E00" mb={2}>
