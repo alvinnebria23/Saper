@@ -28,4 +28,34 @@ const retrieveGeneratedLinks = async () => {
     }
 }
 
-export { generateAndSaveLink, retrieveGeneratedLinks };
+const updateLink = async (data, where) => {
+    try {
+        const { userId } = await retrieveLocalStorage('userData');
+        where.userId = userId;
+        const response =  await axios.post(`${HOST}/api/v1/link/updateLink`, {
+            data: data,
+            where: { where: where }       
+        });
+        return response?.data;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+const removeLinks = async (where) => {
+    try {
+        const { userId } = await retrieveLocalStorage('userData');
+        where.userId = userId;
+        const response =  await axios.post(`${HOST}/api/v1/link/removeLinks`, {
+            where: { where: where }       
+        });
+        return response?.data;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+
+export { generateAndSaveLink, retrieveGeneratedLinks, updateLink, removeLinks };

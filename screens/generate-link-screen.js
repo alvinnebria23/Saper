@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, useWindowDimensions } from 'react-native';
+import { View, useWindowDimensions, FlatList, StyleSheet } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { 
   Button, 
@@ -16,13 +16,14 @@ import {
   InputGroup, 
   InputLeftAddon,
   Modal,
-  Divider,  
+  Checkbox,
+  useToast,
 } from 'native-base';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Controller, useForm } from 'react-hook-form';
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, EvilIcons, Feather, Fontisto, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { DEFAULT_SUBIDS } from '../constants/conversion-report-constants';
-import { generateAndSaveLink, retrieveGeneratedLinks } from '../api/LinkApi';
+import { generateAndSaveLink, removeLinks, retrieveGeneratedLinks, updateLink } from '../api/LinkApi';
 import { CARD_VIEW } from '../constants/view-component-styles.js';
 import { formatDateToString } from '../util/DateUtil';
 
@@ -30,26 +31,21 @@ import { formatDateToString } from '../util/DateUtil';
 const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
-  const [originalUrl, setOriginalUrl] = useState([]);
   const [subIds, setSubIds] = useState([]);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [generatedLinks, setGeneratedLinks] = useState([]);
   const [retrievedLinks, setRetrievedLinks] = useState([]);
+  const [cloneLinks, setCloneLinks] = useState([]);
+  const [modalType, setModalType] = useState('generate');
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedId, setSelectedId] = useState();
+  const selectedLinkIds = [];
+  const toast = useToast();
   const [routes] = useState([
     { key: 'first', title: 'Convert' },
     { key: 'second', title: 'History' },
   ]);
-
-  useEffect(() => {
-    const retrieveLinks = async () => {
-      setIsLoading(true);
-      setRetrievedLinks(await retrieveGeneratedLinks());
-      setIsLoading(false);
-    };
-    retrieveLinks();
-  }, [])
 
   const { control, setValue } = useForm();
   
@@ -69,32 +65,35 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
       setValue(key, "");
     }
     setIsError(false);
-    setOriginalUrl([]);
     setSubIds([]);
   }
-  const pasteFromClipboard = async () => {
-    if(originalUrl.length === 5){
-      setIsError(true);
-      setErrorMessage('Please input 1 - 5 shopee links only.')
-      return;
-    }
+  const pasteFromClipboard = async (originalUrlString) => {
+    setIsError(false);
     const text = await Clipboard.getStringAsync();
     if(!text.startsWith('https://shopee.ph/') && !text.startsWith('https://shopee.ee/')){
       setIsError(true);
       setErrorMessage('Please input valid shopee link.');
+      return;
     }
-    const originalUrlString = originalUrl?.length > 0 ? originalUrl?.join(`\n`) + `\n` : "";
-    setValue("originalUrl",  originalUrlString + text);;
-    setOriginalUrl([...originalUrl, text.trim()]);
+    originalUrlString = originalUrlString ? originalUrlString + "\n" : "";
+    setValue("originalUrl",  originalUrlString + text);
   }
   const onPressConvert = async (formValues) => {
-    if(originalUrl.length == 0){
+    setIsError(false);
+    const originalUrls = formValues.originalUrl?.split("\n");
+    if(!originalUrls || originalUrls.length === 0 || originalUrls.length > 5){
       setIsError(true);
       setErrorMessage('Please input 1 - 5 shopee links only.')
       return;
     }
     setIsLoading(true);
-    for(const link of originalUrl){
+    for(const link of originalUrls){
+      if(link.length > 255){
+        setIsError(true);
+        setErrorMessage('Link too long. Please check the links or the format while inputting multiple links.');
+        setIsLoading(false);
+        return;
+      }
       if(!link.startsWith('https://shopee.ph/') && !link.startsWith('https://shopee.ee/')){
         setIsError(true);
         setErrorMessage('Please input valid shopee link.');
@@ -107,16 +106,153 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
       const value = formValues[`subId-${subid}`] || "";
       subIdValuesArray.push(value);
     }
-    const response = await generateAndSaveLink(originalUrl, subIdValuesArray);
+    const response = await generateAndSaveLink(originalUrls, subIdValuesArray);
     setGeneratedLinks(response.shopeeLinks);
+    setModalType('generate');
     setModalVisible(true);
     setIsError(false);
     setIsLoading(false);
   }
-  const onPressCopyAll = () => {
-    Clipboard.setStringAsync(generatedLinks.join(`\n`));
-    setModalVisible(false);
+  const onPressFooterButton = async (type, { rename: inputValue }) => {
+    if(type === 'secondary'){
+      setModalVisible(false);
+      return;
+    }
+    if(modalType === 'generate'){
+      Clipboard.setStringAsync(generatedLinks.join(`\n`));
+      clearAll(control?._formValues);
+      setModalVisible(false);
+    }else{
+      setIsLoading(true);
+      const tempLinks = [...retrievedLinks];
+      const updatedLinkArray = tempLinks.map((link) => {
+        if(link.id === selectedId){
+          return {
+            ...link,
+            name: inputValue
+          }
+        }
+        return link;
+      });
+      setRetrievedLinks([...updatedLinkArray]);
+      setCloneLinks([...updatedLinkArray]);
+      setModalVisible(false);
+      await updateLink({name:inputValue}, { id: selectedId })
+      setIsLoading(false);
+    } 
   }
+  const onPressDeleteSelected = async () => {
+    setIsLoading(true);
+    const tempLinks = [...retrievedLinks].filter((link) => !selectedLinkIds.includes(link.id))
+    setRetrievedLinks([...tempLinks]);
+    setCloneLinks([...tempLinks]);
+    await removeLinks({id: selectedLinkIds })
+    setIsLoading(false);
+  }
+
+  const onChange = async (id) => {
+    if(selectedLinkIds.includes(id)){
+      const index = selectedLinkIds.findIndex((num) => num === id);
+      selectedLinkIds.splice(index, 1);
+    }else{
+      selectedLinkIds.push(id);
+    }
+  }
+  const onPressCancel = () => {
+    selectedLinkIds.splice(0, selectedLinkIds.length)
+    setRetrievedLinks([...retrievedLinks]);
+  }
+  const onPressCopy = (shortLink) => {
+    Clipboard.setStringAsync(shortLink);
+    toast.show({
+      title: `\t\tCopied to clipboard\n ${shortLink}`,
+      placement: "bottom"
+    })
+  }
+  const onPressEdit = (shortLinkName, id) => {
+    setModalType('rename');
+    setValue('rename', shortLinkName);
+    setSelectedId(id);
+    setModalVisible(true);
+  }
+  const onIndexChange = async (newIndex) => {
+    if(newIndex === 1){
+      setIsLoading(true);
+      const tempLinks = await retrieveGeneratedLinks();
+      setRetrievedLinks([...tempLinks]);
+      setCloneLinks([...tempLinks]);
+      setIsLoading(false);
+    }
+    setIndex(newIndex);
+  }
+  const onPressSearchBarButton = (value) => {
+    if(retrievedLinks?.length === 0){
+      setRetrievedLinks([...cloneLinks]);
+      setValue('search', "");
+      return;
+    }
+    if(value === ""){
+      setRetrievedLinks([...cloneLinks]);
+      return;
+    }
+    const tempArray = [...cloneLinks].filter((link) => link.name === value);
+    setRetrievedLinks([...tempArray]);
+  }
+  const renderItem = ({ item }) => {
+    return (
+      <View 
+        style={CARD_VIEW} 
+        key={item.id}
+      >
+        <Row>
+          <Column flex={1}>
+            <Text fontWeight={'semibold'}>{item?.name}</Text>
+            <Text fontWeight={'light'} style={{ fontSize: 12 }}>{item?.shortLink}</Text>
+            <Text style={{ fontSize: 10, marginTop: '5%' }}> 
+              Created at: {formatDateToString(new Date(item?.createdAt))}
+            </Text>
+          </Column>
+          <Column flex={0} alignItems={'center'} margin={0}>
+            <View style={{ position: 'absolute', right: 0, top: 0 }}>
+              <Checkbox 
+                aria-label={`${item.id}`} 
+                value={item.id} 
+                onChange={onChange.bind(this, item.id)}
+                colorScheme={'orange'}
+                margin={1}
+              />
+            </View>
+            <Row style={{ position: 'absolute', right: 0, bottom: 0}}>
+                <IconButton 
+                  colorScheme="gray" 
+                  key={'edit'} 
+                  size={'md'} 
+                  variant={'ghost'} 
+                  padding={1}
+                  onPress={onPressEdit.bind(this, item.name, item.id)}
+                  _icon={{
+                  as: Feather,
+                  name: "edit"
+                }} />
+                <IconButton 
+                  colorScheme="gray" 
+                  key={'copy'} 
+                  size={'md'} 
+                  variant={'ghost'} 
+                  padding={1}
+                  onPress={onPressCopy.bind(this, item?.shortLink)}
+                  _icon={{
+                  as: AntDesign,
+                  name: "copy1"
+                }} />
+            </Row>
+          </Column>
+        </Row>
+      </View>
+    )
+  };
+  const keyExtractor = (item) => item.id.toString();
+
   const ConvertRoute = () => (
     <KeyboardAvoidingView style={{ flex: 1, marginRight: '5%', marginLeft: '5%' }}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -152,7 +288,7 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
                   onChangeText={onChange} 
                   mt={'2%'} 
                   value={value} 
-                  placeholder={`  If you wish to convert multiple links, please input up to 5 links in different lines\n\nExample:\nhttps://shopee.ph/sapers/firstLink\nhttps://shopee.ph/sapers/secondLink`}
+                  placeholder={`  If you wish to convert multiple links, please input up to 5 links in different lines\n\nExample:\nhttps://shopee.ph/sapers/first-link\nhttps://shopee.ph/sapers/second-link`}
                   rightElement={ <IconButton 
                     size={'sm'} 
                     style={{ right: 0,  bottom: 0, position: 'absolute' }}
@@ -163,7 +299,7 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
                       as: MaterialCommunityIcons,
                       name: "content-paste"
                     }}
-                    onPress={pasteFromClipboard}
+                    onPress={pasteFromClipboard.bind(this, control._formValues.originalUrl)}
                   />}
                 />
               </InputGroup>
@@ -235,42 +371,49 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
   
   const HistoryRoute = () => (
     <Column style={{ flex: 1, marginBottom: '20%' }}>
-      <View style= {{ marginRight: '5%', marginLeft: '5%' }}>
-      <Input 
-        variant="outline" 
-        placeholder="Search link name" 
-        mt={'5%'}
-        mb={'5%'}
-        InputLeftElement={<Icon as={AntDesign} name="search1" size={'md'} ml={'5%'} />}
+      <Row style= {{ marginRight: '5%', marginLeft: '5%' }}>
+        <Controller
+          key={'search'}
+          name={'search'}
+          control={control}
+          render={({ field : { onChange, value }}) => {
+            return (
+              <Input 
+                variant="outline" 
+                placeholder="Search link name" 
+                mt={'5%'}
+                width={'100%'}
+                value={value}
+                onChangeText={onChange}
+                InputRightElement={  
+                <IconButton 
+                  colorScheme={'gray'} 
+                  key={'edit'} 
+                  size={'md'} 
+                  variant={'ghost'} 
+                  onPress={onPressSearchBarButton.bind(this, control?._formValues?.search)}
+                  _icon={{
+                    as: Ionicons,
+                    name: retrievedLinks?.length  === 0 ? 'refresh' : 'search-outline'
+                  }} />}
+              />)
+          }}
+        />
+      </Row>
+      <Button.Group isAttached style= {{ marginRight: '5%', marginLeft: '5%', marginBottom: '5%' }}>
+        <Button variant={'subtle'} colorScheme={'red'} width={'50%'} onPress={onPressDeleteSelected}>
+          DELETE SELECTED
+        </Button>
+        <Button variant={'subtle'} colorScheme={'gray'} width={'50%'} onPress={onPressCancel}>
+          UNSELECT ALL
+        </Button>
+      </Button.Group>
+      <FlatList
+        data={retrievedLinks}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        showsVerticalScrollIndicator={false}
       />
-      </View>
-      <ScrollView>
-        {retrievedLinks?.length > 0 && retrievedLinks.map((link) => (
-          <Row style={CARD_VIEW} key={link?.name}>
-              <Column flex={1}>
-                <Text fontWeight={'semibold'}>{link?.name}</Text>
-                <Text fontWeight={'light'} style={{ fontSize: 12 }}>{link?.shortLink}</Text>
-                <Text style={{ fontSize: 10, marginTop: '5%', color: 'green' }}> 
-                  Created at: {formatDateToString(new Date(link?.createdAt))}
-                </Text>
-              </Column>
-              <Row flex={0} alignItems={'center'} margin={0}>
-                <View>
-                  <IconButton colorScheme="gray" key={'delete'} size={'sm'} variant={'ghost'} _icon={{
-                    as: AntDesign,
-                    name: "delete"
-                  }} />
-                </View>
-                <View>
-                  <IconButton colorScheme="gray" key={'copy'} size={'sm'} variant={'ghost'} _icon={{
-                    as: AntDesign,
-                    name: "copy1"
-                  }} />
-                </View>
-              </Row>
-          </Row>
-        ))}
-      </ScrollView>
     </Column>
   );
   
@@ -297,19 +440,44 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
       <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} avoidKeyboard size="lg">
         <Modal.Content>
           <Modal.CloseButton />
-          <Modal.Header>Generated Short Link</Modal.Header>
+          <Modal.Header>{modalType === 'generate' ? 'Generated Short Link' : 'Rename link'}</Modal.Header>
           <Modal.Body>
-            <TextArea 
-              width={'100%'}
-              padding={0}
-              fontSize={10}
-              value={generatedLinks.join(`\n`)}
-            />
+           {modalType === 'generate' ?
+              <TextArea 
+                width={'100%'}
+                padding={0}
+                fontSize={10}
+                value={generatedLinks.join(`\n`)}
+              /> :
+                 <Controller
+                  key={'rename'}
+                  name={'rename'}
+                  control={control}
+                  render={({ field : { onChange, value }}) => {
+                    return (<Input value={value} onChangeText={onChange}/>)
+                  }}
+                />
+           }
           </Modal.Body>
           <Modal.Footer>
-            <Button colorScheme={'orange'} flex="1" onPress={onPressCopyAll}>
-              Copy All
+            <Button 
+              colorScheme={'orange'} 
+              flex="1" 
+              onPress={onPressFooterButton.bind(this, 'primary', control?._formValues)}
+              marginRight={1}
+            >
+              {modalType === 'generate' ? 'COPY ALL TO CLIPBOARD' : 'RENAME'}
             </Button>
+            {modalType !== 'generate' && 
+            <Button 
+              colorScheme={'gray'} 
+              flex="1" 
+              onPress={onPressFooterButton.bind(this, 'secondary')}
+              marginLeft={1}
+              variant={'subtle'}
+            >
+              CANCEL
+            </Button>}
           </Modal.Footer>
         </Modal.Content>
       </Modal>
@@ -319,7 +487,7 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
-        onIndexChange={setIndex}
+        onIndexChange={onIndexChange}
         initialLayout={{ width: layout.width }}
         renderTabBar={renderTabBar}
       />
