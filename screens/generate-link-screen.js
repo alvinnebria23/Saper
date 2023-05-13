@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, useWindowDimensions, FlatList, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, useWindowDimensions, FlatList } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { 
   Button, 
@@ -21,7 +21,7 @@ import {
 } from 'native-base';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Controller, useForm } from 'react-hook-form';
-import { AntDesign, EvilIcons, Feather, Fontisto, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { DEFAULT_SUBIDS } from '../constants/conversion-report-constants';
 import { generateAndSaveLink, removeLinks, retrieveGeneratedLinks, updateLink } from '../api/LinkApi';
 import { CARD_VIEW } from '../constants/view-component-styles.js';
