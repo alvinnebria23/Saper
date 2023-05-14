@@ -36,4 +36,18 @@ const checkEmail = async(email) => {
         return false;
     }
 }
-export { registerUser, loginUser, checkEmail };
+
+const changeUserInformation = async (data, where) => {
+    try {
+        const response =  await axios.post(`${HOST}/api/v1/user/changeUserInformation`, {
+            data: data,
+            where: where
+        });
+        return response.data
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+export { registerUser, loginUser, checkEmail, changeUserInformation };

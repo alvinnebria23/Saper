@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button } from 'native-base';
+import { Button } from 'native-base';
 import { View } from 'react-native';
 import { BottomTabNavigator } from '../components/tab';
 import DashboardScreen from './dashboard-screen';
@@ -67,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
       case 3:
         return (<ClickReportScreen />);
       case 4:
-        return (<AccountScreen navigation={navigation} />);
+        return (<AccountScreen navigation={navigation} setIsLoading={setIsLoading} />);
       default:
         return;
     }

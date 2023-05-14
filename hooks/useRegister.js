@@ -27,7 +27,7 @@ export default useRegister = ({ setValue, navigation }) => {
             const errorFields = validateInputObject(STEP2, { appId, secretKey });
             if(errorFields.length === 0){
                 setSpinnerObject({ isLoading: true, message: 'Verifying API Credentials. . .' });
-                const response = await checkApi(appId, secretKey);
+                const response = await checkApi(appId, secretKey, false);
                 if(!response?.success){
                     const status = {
                         header: 'Error message',

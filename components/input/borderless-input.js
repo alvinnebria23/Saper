@@ -22,6 +22,7 @@ const BorderlessInput = ({
           margin: 0,  
           minWidth: '100%',
         }}
+        keyboardType={name === 'contactNumber' ? 'numeric' : 'default'}
         name={name}
         value={value}
         onChangeText={onChange}

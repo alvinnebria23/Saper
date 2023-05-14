@@ -2,9 +2,11 @@ import axios from "axios";
 import { HOST } from '@env'
 import { retrieveLocalStorage } from "../helpers/storageHelper";
 
-const checkApi = async (appId, secretKey) => {
+const checkApi = async (appId, secretKey, isUpdate, id) => {
     try {
         const response = await axios.post(`${HOST}/api/v1/shopee/checkApi`, {
+            id,
+            isUpdate,
             appId, 
             secretKey
         });

@@ -437,7 +437,7 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
 
   return (
     <View width="100%" height={'100%'}>
-      <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} avoidKeyboard size="lg">
+      <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} avoidKeyboard size="xl">
         <Modal.Content>
           <Modal.CloseButton />
           <Modal.Header>{modalType === 'generate' ? 'Generated Short Link' : 'Rename link'}</Modal.Header>

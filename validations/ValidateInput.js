@@ -72,4 +72,4 @@ const validateEmptyString = (object) => {
     }
     return emptyInputFields;
 }
-export { isValidEmail, isAlphabetsOnly, isNumericOnly, validateInputObject };
+export { isValidEmail, isAlphabetsOnly, isNumericOnly, validateInputObject, validatePassword };
