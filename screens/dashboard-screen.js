@@ -6,7 +6,7 @@ import { RangeDatePickerModal } from '../components/modal';
 import { DatePickerButton } from '../components/button';
 import { DASHBOARD_CARD_STYLE } from '../constants/dashboard-constants';
 import useDatePicker from '../hooks/useDatePicker';
-import { NoDataFound } from '../components/image';
+import { ImageLogo, NoDataFound } from '../components/image';
 import { getNetProfit, getTax } from '../util/CommonUtil';
 const DashboardScreen = ({ 
     dashboardFilterDate, 
@@ -99,9 +99,15 @@ const DashboardScreen = ({
                 dateRange={dateFilter}
             />
             <View width="100%" height={'100%'}>
-                <View>
+                <Row alignItems={'center'} marginRight={'4%' }>
                     <Heading ml='5%' mt='5%' mb={'4%'} size='md' color={'primary.50'}>Dashboard</Heading>
-                </View>
+                    <ImageLogo 
+                        mb={0}  
+                        source={require('../assets/saper-icon.png')} 
+                        size={'2xs'}
+                        style={{ right: 0 , position: 'absolute'  }}
+                    />
+                </Row>
                 <View style={{ marginLeft: '4%' , marginRight: '4%', flex: 2 }}>
                     <DatePickerButton 
                         setShowDatePicker={setShowDatePicker} 

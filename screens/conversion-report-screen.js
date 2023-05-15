@@ -6,7 +6,7 @@ import { RangeDatePickerModal } from '../components/modal';
 import useDatePicker from '../hooks/useDatePicker';
 import TreeView from 'react-native-final-tree-view';
 import { DASHBOARD_CARD_STYLE } from '../constants/dashboard-constants';
-import { NoDataFound } from '../components/image';
+import { ImageLogo, NoDataFound } from '../components/image';
 import { TwoColumnLabel } from '../components/label';
 import { AntDesign } from '@expo/vector-icons';
 import useConversion from '../hooks/useConversion';
@@ -86,9 +86,15 @@ const ConversionReportScreen =  ({
           onSelectDateRange={onSelectDateRange}
           dateRange={dateFilter}
       />
-    <View>
-        <Heading ml='5%' mt='5%' mb={'4%'} size='md' color={'primary.50'}>Conversion Report</Heading>
-    </View>
+    <Row alignItems={'center'} marginRight={'4%' }>
+      <Heading ml='5%' mt='5%' mb={'4%'} size='md' color={'primary.50'}>Conversion Report</Heading>
+      <ImageLogo 
+        mb={0}  
+        source={require('../assets/saper-icon.png')} 
+        size={'2xs'}
+        style={{ right: 0 , position: 'absolute'  }}
+      />
+    </Row>
     <View style={{ marginLeft: '4%' , marginRight: '4%', flex: 2 }}>
         <DatePickerButton 
             setShowDatePicker={setShowDatePicker} 

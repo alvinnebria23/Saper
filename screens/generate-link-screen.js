@@ -26,6 +26,7 @@ import { DEFAULT_SUBIDS } from '../constants/conversion-report-constants';
 import { generateAndSaveLink, removeLinks, retrieveGeneratedLinks, updateLink } from '../api/LinkApi';
 import { CARD_VIEW } from '../constants/view-component-styles.js';
 import { formatDateToString } from '../util/DateUtil';
+import { ImageLogo } from '../components/image';
 
 
 const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
@@ -436,7 +437,7 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
   );
 
   return (
-    <View width="100%" height={'100%'}>
+    <>
       <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} avoidKeyboard size="xl">
         <Modal.Content>
           <Modal.CloseButton />
@@ -481,9 +482,24 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-      <View>
-          <Heading ml='5%' mt='5%' size='md' color={'primary.50'}>Shopee Affiliate Link</Heading>
-      </View>
+    <View width="100%" height={'100%'}>
+      <Row alignItems={'center'} marginRight={'4%'}>
+        <Heading 
+          ml='5%' 
+          mt='5%' 
+          mb={'4%'} 
+          size='md' 
+          color={'primary.50'}
+        >
+          Shopee Affiliate Link
+        </Heading>
+        <ImageLogo 
+          mb={0}  
+          source={require('../assets/saper-icon.png')} 
+          size={'2xs'}
+          style={{ right: 0 , position: 'absolute' }}
+        />
+      </Row>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -492,6 +508,7 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
         renderTabBar={renderTabBar}
       />
     </View>
+  </>
   );
 };
 
