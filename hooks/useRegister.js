@@ -8,6 +8,26 @@ export default useRegister = ({ setValue, navigation }) => {
     const [isConfirm, setIsConfirm] = useState(false);
     const [status, setStatus] = useState({});
     const [spinnerObject, setSpinnerObject] = useState({ isLoading: false, message: '' });
+    const [modalVisible, setModalVisible] = useState(true);
+    const [isAccepted, setIsAccepted] = useState(false);
+    const [isLegalAge, setIsLegalAage] = useState(false);
+
+    const onPressTermsAndConditions = (action) => {
+        if(action === 'accept'){
+            setModalVisible(false);
+        } else {
+            navigation.navigate('Login');
+        }
+    }
+    
+    const onChangeSelect = (name, value) => {
+        if(name === 'terms'){
+            setIsAccepted(value);
+        } else {
+            setIsLegalAage(value);
+        }
+    }
+
     const onPressNext = async (stepNumber, formValues) => {
         if(stepNumber === STEP1){
             const { email, fullName, contactNumber, password, confirmPassword } = formValues;
@@ -78,5 +98,10 @@ export default useRegister = ({ setValue, navigation }) => {
         onCloseDialog,
         isConfirm,
         spinnerObject,
+        modalVisible,
+        onPressTermsAndConditions,
+        onChangeSelect,
+        isAccepted,
+        isLegalAge,
     };
 };

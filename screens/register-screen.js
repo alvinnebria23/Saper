@@ -1,12 +1,23 @@
 import React, { useRef } from 'react';
-import { Column, Icon, IconButton, Button, Heading, Text, Row, ScrollView } from 'native-base';
+import { Column, Icon, IconButton, Button, Heading, Text, Row, ScrollView, Modal, TextArea, Checkbox } from 'native-base';
 import { TouchableOpacity, View } from 'react-native';
 import { LOGO_STYLES_VIEW  } from '../constants/view-component-styles.js';
 import { LeftIconInput } from '../components/input';
 import { ImageLogo } from '../components/image';
 import { useForm, Controller } from 'react-hook-form';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { INIT_ACCOUNT_INFORMATION_INPUTS, INIT_API_INPUTS, PROGRESS_STEPS_STYLE, PROGRESS_BUTTON_TEXT_STYLE, CARD_CONTAINER, CARDVIEW_STYLE, STEP1, STEP2, STEP3 } from '../constants/register-screen-constants';
+import { 
+  INIT_ACCOUNT_INFORMATION_INPUTS, 
+  INIT_API_INPUTS, 
+  PROGRESS_STEPS_STYLE, 
+  PROGRESS_BUTTON_TEXT_STYLE, 
+  CARD_CONTAINER, 
+  CARDVIEW_STYLE, 
+  STEP1, 
+  STEP2, 
+  STEP3,
+  TERM_AND_CONDITiONS_OBJECT,
+} from '../constants/register-screen-constants';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { DetailCard } from '../components/card';
 import { removeInvalidNameRegex, removeNonNumericRegex } from '../constants/regex.js';
@@ -22,9 +33,22 @@ const RegisterScreen = ({ navigation }) => {
     status, onCloseDialog, 
     isConfirm, 
     spinnerObject, 
-    onPressBack 
+    onPressBack,
+    modalVisible,
+    onPressTermsAndConditions,
+    onChangeSelect,
+    isAccepted,
+    isLegalAge,
   } = useRegister({ setValue, navigation});
   const cancelRef = useRef(null);
+
+  const applyBoldStyle = text => {
+    let numberOfItemsAdded = 0;
+    const result = text.sentence.split(/\{\d+\}/);
+    text.boldText.forEach((boldText, i) => result.splice(++numberOfItemsAdded + i, 0, <Text key={boldText} style={{fontWeight: 'bold', fontSize: 16 }}>{boldText}</Text>));
+    return <Text>{result}</Text>;
+  };
+
   return (
       <ScrollView style={{ flex: 1, marginTop: '13%' }}>
           <View>
@@ -54,6 +78,61 @@ const RegisterScreen = ({ navigation }) => {
                 </Button>
               )}
             />
+            <Modal 
+              closeOnOverlayClick={false} 
+              isOpen={modalVisible} 
+              onClose={onPressTermsAndConditions.bind(this, 'cancel')}
+              avoidKeyboard 
+              size={'xl'}
+            >
+              <Modal.Content>
+                <Modal.CloseButton />
+                <Modal.Header>TERMS AND CONDITIONS | PRIVACY POLICY</Modal.Header>
+                <Modal.Body>
+                  <ScrollView showsVerticalScrollIndicator={false}>
+                    {applyBoldStyle(TERM_AND_CONDITiONS_OBJECT)}
+                  </ScrollView>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Column>
+                      <Checkbox 
+                        marginLeft={5}
+                        marginBottom={5}
+                        onChange={onChangeSelect.bind(this, 'terms')}
+                        colorScheme={'orange'}
+                      >
+                        {`I read, comprehend and accept the terms\nand condition and privacy policy of\nSAPERS mobile app.`}
+                      </Checkbox>
+                      <Checkbox 
+                        marginLeft={5}
+                        marginBottom={5}
+                        onChange={onChangeSelect.bind(this, 'age')}
+                        colorScheme={'orange'}
+                      >
+                        {`I am 18 years old above.`}
+                      </Checkbox>
+                    </Column>
+                    <Button 
+                      colorScheme={'orange'} 
+                      flex="1" 
+                      onPress={onPressTermsAndConditions.bind(this, 'accept')}
+                      marginRight={1}
+                      isDisabled={!(isAccepted && isLegalAge)}
+                    >
+                      NEXT
+                    </Button>
+                    <Button 
+                      colorScheme={'gray'} 
+                      flex="1" 
+                      onPress={onPressTermsAndConditions.bind(this, 'cancel')}
+                      marginLeft={1}
+                      variant={'subtle'}
+                    >
+                      CANCEL
+                    </Button>
+                </Modal.Footer>
+              </Modal.Content>
+            </Modal>
           </>
       </ScrollView>
   );

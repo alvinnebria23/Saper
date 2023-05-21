@@ -175,9 +175,7 @@ const AccountScreen =  ({ navigation, setIsLoading }) => {
                   name={name}
                   control={control}
                   render={({ field: { onChange, value }}) => {
-                    if(!isEditing){
-                      value = initialValue;
-                    }
+                    value = initialValue;
                     return (
                       <DetailCard 
                         onChange={onChange} 
