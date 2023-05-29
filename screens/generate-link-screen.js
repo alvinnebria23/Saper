@@ -108,6 +108,11 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
       subIdValuesArray.push(value);
     }
     const response = await generateAndSaveLink(originalUrls, subIdValuesArray);
+    if(response.fail){
+      setErrorMessage(response.message);
+      setIsError(true);
+      return;
+    }
     setGeneratedLinks(response.shopeeLinks);
     setModalType('generate');
     setModalVisible(true);
@@ -138,7 +143,12 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
       setRetrievedLinks([...updatedLinkArray]);
       setCloneLinks([...updatedLinkArray]);
       setModalVisible(false);
-      await updateLink({name:inputValue}, { id: selectedId })
+      const response = await updateLink({name:inputValue}, { id: selectedId });
+      if(response.fail){
+        setErrorMessage(response.message);
+        setIsError(true);
+        return
+      }
       setIsLoading(false);
     } 
   }
@@ -147,7 +157,12 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
     const tempLinks = [...retrievedLinks].filter((link) => !selectedLinkIds.includes(link.id))
     setRetrievedLinks([...tempLinks]);
     setCloneLinks([...tempLinks]);
-    await removeLinks({id: selectedLinkIds })
+    const response = await removeLinks({id: selectedLinkIds });
+    if(response.fail){
+      setErrorMessage(response.message);
+      setIsError(true);
+      return;
+    }
     setIsLoading(false);
   }
 
@@ -179,9 +194,14 @@ const GenerateLinkScreen =  ({ navigation, setIsLoading }) => {
   const onIndexChange = async (newIndex) => {
     if(newIndex === 1){
       setIsLoading(true);
-      const tempLinks = await retrieveGeneratedLinks();
-      setRetrievedLinks([...tempLinks]);
-      setCloneLinks([...tempLinks]);
+      const response = await retrieveGeneratedLinks();
+      if(response.fail){
+        setErrorMessage(response.message);
+        setIsError(true);
+        return;
+      }
+      setRetrievedLinks([...response]);
+      setCloneLinks([...response]);
       setIsLoading(false);
     }
     setIndex(newIndex);

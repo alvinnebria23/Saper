@@ -12,15 +12,17 @@ const checkApi = async (appId, secretKey, isUpdate, id) => {
         });
         return response.data
     } catch (error) {
-        console.log(error);
-        return false;
+        if(error.code === "ERR_NETWORK"){
+            return { fail: true, message: "Please check your internet connection."};
+        }else{
+            return { fail: true, message: "Please try again later."}; 
+        }
     }
 }
 
 const getDashboardReport = async (filter) => {
     try {
         const { appId, secretKey, token } = await retrieveLocalStorage('userData');
-        console.log("HOST: " + HOST);
         const response = await axios.post(`${HOST}/api/v1/shopee/dashboard`, {
             appId: appId,
             secretKey: secretKey,
@@ -32,8 +34,11 @@ const getDashboardReport = async (filter) => {
         });
         return response.data;
     } catch (error) {
-        console.log(error);
-        return { error: true, message: "Please do filtering dates every 30 seconds only."};
+        if(error.code === "ERR_NETWORK"){
+            return { fail: true, message: "Please check your internet connection."};
+        }else{
+            return { fail: true, message: "Please try again later."}; 
+        }
     }
 }
 
@@ -51,8 +56,11 @@ const getSubIdTree = async (filter) => {
         });
         return response.data;
     } catch (error) {
-        console.log(error);
-        return { error: true, message: "Please do filtering dates every 30 seconds only."};
+        if(error.code === "ERR_NETWORK"){
+            return { fail: true, message: "Please check your internet connection."};
+        }else{
+            return { fail: true, message: "Please try again later."}; 
+        }
     }
 }
 
@@ -70,8 +78,11 @@ const getClickTimeTree = async (filter) => {
         });
         return response.data;
     } catch (error) {
-        console.log(error);
-        return { error: true, message: "Please do filtering dates every 30 seconds only."};
+        if(error.code === "ERR_NETWORK"){
+            return { fail: true, message: "Please check your internet connection."};
+        }else{
+            return { fail: true, message: "Please try again later."}; 
+        }
     }
 }
 
@@ -90,8 +101,11 @@ const getInitialData = async (filter) => {
         });
         return response.data;
     } catch (error) {
-        console.log(error);
-        return { error: true, message: "Please do filtering dates every 30 seconds only."};
+        if(error.code === "ERR_NETWORK"){
+            return { fail: true, message: "Please check your internet connection."};
+        }else{
+            return { fail: true, message: "Please try again later."}; 
+        }
     }
 }
 export { checkApi, getDashboardReport, getSubIdTree, getClickTimeTree, getInitialData };

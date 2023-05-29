@@ -23,7 +23,7 @@ export default useHome = () => {
                 purchaseTimeEnd:${dashboardFilterDate.endDate.unixtimestamp}, 
                 limit:500
             `);
-            if(data?.error){
+            if(data?.fail || data?.error){
                 const status = {
                     header: 'Error message',
                     body: data?.message,
@@ -52,7 +52,7 @@ export default useHome = () => {
                     purchaseTimeEnd:${dashboardFilterDate.endDate.unixtimestamp}, 
                     limit:500
                 `);
-                if(data?.error){
+                if(data?.fail || data?.error){
                     const status = {
                         header: 'Dashboard Error message',
                         body: data?.message,
@@ -86,7 +86,7 @@ export default useHome = () => {
                 } else {
                     data = await getClickTimeTree(parameters);
                 }
-                if(data?.errors){
+                if(data?.fail || data?.errors){
                     const status = {
                         header: 'Conversion Report Error message',
                         body: data?.message,

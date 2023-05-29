@@ -61,6 +61,11 @@ export default useAccount = (navigation, setValue, setIsLoading) => {
             { name: formValues.fullName, contactNumber: formValues.contactNumber },
             { id: userData.id }
           );
+          if(user.fail){
+            setErrorMessage(user.message);
+            setIsError(true);
+            return;
+          }
           user.password = userData.password;
           await clearLocalStorage();
           await setLocalStorage('userData', user);
@@ -104,6 +109,11 @@ export default useAccount = (navigation, setValue, setIsLoading) => {
         setModalVisible(false);
         setIsLoading(true);
         const user = await changeUserInformation({ password: newPassword }, { id: userData.id });
+        if(user.fail){
+          setErrorMessage(user.message);
+          setIsError(true);
+          return;
+        }
         user.password = newPassword;
         await clearLocalStorage();
         await setLocalStorage('userData', user);
@@ -135,6 +145,11 @@ export default useAccount = (navigation, setValue, setIsLoading) => {
         setIsLoading(true);
         setModalVisible(false);
         const user = await checkApi(userData.appId, formValues.secretKey, false, userData.id);
+        if(user.fail){
+          setErrorMessage(user.message);
+          setIsError(true);
+          return;
+        }
         if(user.success){
           user.password = userData.password;
           await clearLocalStorage();

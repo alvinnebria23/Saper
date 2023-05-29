@@ -63,7 +63,7 @@ const RangeDatePickerModal = ({
                             <DateRangePicker
                                 onSelectDateRange={onSelectDateRange}
                                 responseFormat="YYYY-MM-DD"
-                                maxDate={moment()}
+                                maxDate={moment().subtract(1, "days")}
                                 minDate={moment().subtract(90, "days")}
                                 clearBtnTitle={'Reset'}
                                 confirmBtnTitle={'Done'}

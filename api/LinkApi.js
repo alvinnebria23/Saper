@@ -16,8 +16,11 @@ const generateAndSaveLink = async (originalUrl, subIds) => {
         });
         return response.data;
     } catch (error) {
-        console.log(error);
-        return false;
+        if(error.code === "ERR_NETWORK"){
+            return { fail: true, message: "Please check your internet connection."};
+        }else{
+            return { fail: true, message: "Please try again later."}; 
+        }
     }
 }
 
@@ -31,8 +34,11 @@ const retrieveGeneratedLinks = async () => {
         });
         return response?.data?.shopeeLinks;
     } catch (error) {
-        console.log(error);
-        return false;
+        if(error.code === "ERR_NETWORK"){
+            return { fail: true, message: "Please check your internet connection."};
+        }else{
+            return { fail: true, message: "Please try again later."}; 
+        }
     }
 }
 
@@ -50,8 +56,11 @@ const updateLink = async (data, where) => {
         });
         return response?.data;
     } catch (error) {
-        console.log(error);
-        return false;
+        if(error.code === "ERR_NETWORK"){
+            return { fail: true, message: "Please check your internet connection."};
+        }else{
+            return { fail: true, message: "Please try again later."}; 
+        }
     }
 }
 
@@ -68,8 +77,11 @@ const removeLinks = async (where) => {
         });
         return response?.data;
     } catch (error) {
-        console.log(error);
-        return false;
+        if(error.code === "ERR_NETWORK"){
+            return { fail: true, message: "Please check your internet connection."};
+        }else{
+            return { fail: true, message: "Please try again later."}; 
+        }
     }
 }
 
