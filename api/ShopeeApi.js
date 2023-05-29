@@ -19,11 +19,16 @@ const checkApi = async (appId, secretKey, isUpdate, id) => {
 
 const getDashboardReport = async (filter) => {
     try {
-        const { appId, secretKey } = await retrieveLocalStorage('userData');
+        const { appId, secretKey, token } = await retrieveLocalStorage('userData');
+        console.log("HOST: " + HOST);
         const response = await axios.post(`${HOST}/api/v1/shopee/dashboard`, {
             appId: appId,
             secretKey: secretKey,
             parameters: filter,
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
         });
         return response.data;
     } catch (error) {
@@ -34,11 +39,15 @@ const getDashboardReport = async (filter) => {
 
 const getSubIdTree = async (filter) => {
     try {
-        const { appId, secretKey } = await retrieveLocalStorage('userData');
+        const { appId, secretKey, token } = await retrieveLocalStorage('userData');
         const response = await axios.post(`${HOST}/api/v1/shopee/subIdTree`, {
             appId: appId,
             secretKey: secretKey,
             parameters: filter,
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
         });
         return response.data;
     } catch (error) {
@@ -49,11 +58,15 @@ const getSubIdTree = async (filter) => {
 
 const getClickTimeTree = async (filter) => {
     try {
-        const { appId, secretKey } = await retrieveLocalStorage('userData');
+        const { appId, secretKey, token } = await retrieveLocalStorage('userData');
         const response = await axios.post(`${HOST}/api/v1/shopee/clickTimeTree`, {
             appId: appId,
             secretKey: secretKey,
             parameters: filter,
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
         });
         return response.data;
     } catch (error) {
@@ -64,12 +77,16 @@ const getClickTimeTree = async (filter) => {
 
 const getInitialData = async (filter) => {
     try {
-        const { appId, secretKey } = await retrieveLocalStorage('userData');
+        const { appId, secretKey, token } = await retrieveLocalStorage('userData');
         console.log(appId);
         const response = await axios.post(`${HOST}/api/v1/shopee/initial`, {
             appId: appId,
             secretKey: secretKey,
             parameters: filter,
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
         });
         return response.data;
     } catch (error) {

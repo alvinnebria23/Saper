@@ -1,5 +1,6 @@
 import axios from "axios";
 import { HOST } from '@env'
+import { retrieveLocalStorage } from "../helpers/storageHelper";
 const registerUser = async (user) => {
     try {
         const response =  await axios.post(`${HOST}/api/v1/user/registerUser`, {
@@ -39,9 +40,14 @@ const checkEmail = async(email) => {
 
 const changeUserInformation = async (data, where) => {
     try {
+        const { token } = await retrieveLocalStorage('userData');
         const response =  await axios.post(`${HOST}/api/v1/user/changeUserInformation`, {
             data: data,
             where: where
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
         });
         return response.data
     } catch (error) {
