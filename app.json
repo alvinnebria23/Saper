@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Sapers",
+    "slug": "Sapers",
+    "version": "1.0.6",
+    "orientation": "portrait",
+    "icon": "./assets/saper-logo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/sapers-splash-screen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FF4E00"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.sapers",
+      "versionCode": 6,
+      "permissions": [
+        "READ_EXTERNAL_STORAGE"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/saper-logo.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3d973c2e-1fa2-4e79-be96-2215eaf65096"
+      }
+    }
+  }
+}
+

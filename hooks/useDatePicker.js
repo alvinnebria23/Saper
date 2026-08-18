@@ -1,0 +1,62 @@
+
+import React, { useState } from 'react';
+import { 
+    formatDateToString,
+    formatDateToUnixTimestamp,
+    getDateToday,
+    getPastDate,
+} from '../util/DateUtil.js';
+import { YESTERDAY } from '../constants/dashboard-constants.js';
+export default useDatePicker = (setFilterDate) => {
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [dateFilter, setDateFilter] = useState({});
+    const [isUpdated, setIsUpdated] = useState(false);
+    const onRequestClose = ({ action, value }) => {
+        let startDate;
+        let endDate;
+
+        if(action === 'button'){
+            startDate = getPastDate(value);
+            endDate = getDateToday();
+            if(value === YESTERDAY){
+                startDate.setDate(startDate.getDate() - 1);
+                endDate.setDate(endDate.getDate() - 2);
+            }
+            else{
+                startDate.setDate(startDate.getDate() - 1);
+                endDate.setDate(endDate.getDate() - 1);
+            }
+        }else{
+            if(!dateFilter.startDate && !dateFilter.endDate){
+                setShowDatePicker(false);
+                return;
+            }
+            if(!isUpdated){
+                setShowDatePicker(false);
+                return;
+            }
+            startDate = new Date(dateFilter.startDate);
+            endDate = new Date(dateFilter.endDate);
+        }
+        const startDateText = formatDateToString(startDate);
+        startDate.setHours(0, 0, 0, 0);
+        const endDateText = formatDateToString(endDate);
+        endDate.setHours(23, 59, 59);
+        setFilterDate({ startDate: { text: startDateText , unixtimestamp: formatDateToUnixTimestamp(startDate) }, endDate: { text: endDateText, unixtimestamp: formatDateToUnixTimestamp(endDate) }});
+        setShowDatePicker(false);
+        setIsUpdated(false);
+    }
+
+    const onSelectDateRange = (range) => {
+        setIsUpdated(true);
+        setDateFilter({ startDate: range.firstDate, endDate:range.secondDate })
+    }
+    
+    return {
+        showDatePicker,
+        setShowDatePicker,
+        onRequestClose,
+        onSelectDateRange,
+        dateFilter,
+    }
+}

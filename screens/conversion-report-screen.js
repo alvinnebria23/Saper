@@ -1,0 +1,212 @@
+import React from 'react';
+import { View } from 'react-native';
+import { Column, Heading, Icon, Radio, Row, ScrollView, Menu, Switch, Text, Button } from 'native-base';
+import { DatePickerButton } from '../components/button';
+import { RangeDatePickerModal } from '../components/modal';
+import useDatePicker from '../hooks/useDatePicker';
+import TreeView from 'react-native-final-tree-view';
+import { DASHBOARD_CARD_STYLE } from '../constants/dashboard-constants';
+import { ImageLogo, NoDataFound } from '../components/image';
+import { TwoColumnLabel } from '../components/label';
+import { AntDesign } from '@expo/vector-icons';
+import useConversion from '../hooks/useConversion';
+import { CLICKTIME, SUBID, SUBID_SELECT_ITEMS } from '../constants/conversion-report-constants';
+import { getTax, getNetProfit } from '../util/CommonUtil.js';
+import UnauthorizedScreen from '../screens/unauthorized-screen.js';
+const ConversionReportScreen =  ({ 
+  conversionData,
+  conversionFilterDate,
+  setConversionFilterDate,
+  isToggled,
+  setIsToggled,
+  isLoading,
+  displayType,
+  setDisplayType,
+  userType,
+}) => {
+  const {
+    showDatePicker, 
+    setShowDatePicker, 
+    onRequestClose, 
+    onSelectDateRange, 
+    dateFilter,
+  } = useDatePicker(setConversionFilterDate);
+  const {
+    selectedSubIds,
+    displayData,
+    onChange,
+    onPress,
+    isOpen
+  } = useConversion(conversionData?.conversionReport, displayType, setDisplayType);
+  const triggerProps = (props) => {
+    return (<Button 
+              {...props}
+              isDisabled={displayType !== SUBID}
+              variant={"outline"} 
+              size={'xs'}
+              width={'40%'}
+              height={'80%'}
+              onPress={onPress}
+              leftIcon={<Icon size={3} ml={'80%'} color={'black'} as={<AntDesign  name={'down'} />} />}
+            />)
+  }
+  const getIndicator = (isExpanded, hasChildrenNodes, level) => {
+    if (!hasChildrenNodes) {
+      return (
+        <>
+          {displayType === SUBID ? 
+          <Icon 
+          size={4}
+          color={'black'}
+          mt={1}
+          as={<AntDesign  name={displayType === CLICKTIME ? 'clockcircleo' : 'minus'} />} /> :
+          <Text>:</Text>}
+        </>)
+    } else if (isExpanded) {
+      return (
+          <Icon 
+            size={4}
+            color={'black'}
+            mt={1}
+            as={<AntDesign  name={'minus'} />} />
+      )
+    } else {
+      return (
+          <Icon 
+            size={4}
+            color={'#FF4E00'}
+            mt={1}
+            as={<AntDesign  name={'pluscircle'} />} />
+      )
+    }
+  }
+  return (
+    <View bg="white" width="100%" height={'100%'}>
+    <RangeDatePickerModal 
+          showDatePicker={showDatePicker} 
+          onRequestClose={onRequestClose}
+          onSelectDateRange={onSelectDateRange}
+          dateRange={dateFilter}
+      />
+    <Row alignItems={'center'} marginRight={'4%' }>
+      <Heading ml='5%' mt='5%' mb={'4%'} size='md' color={'primary.50'}>Conversion Report</Heading>
+      <ImageLogo 
+        mb={0}  
+        source={require('../assets/saper-icon.png')} 
+        size={'2xs'}
+        style={{ right: 0 , position: 'absolute'  }}
+      />
+    </Row>
+    {userType === "premium" || userType === "trial" ? 
+      <View style={{ marginLeft: '4%' , marginRight: '4%', flex: 2 }}>
+      <DatePickerButton 
+          setShowDatePicker={setShowDatePicker} 
+          startDateText={conversionFilterDate.startDate.text} 
+          endDateText={conversionFilterDate.endDate.text}
+      />
+      <ScrollView style={{ flex: 2, marginBottom: "20%" }} showsVerticalScrollIndicator={false}>
+        <Row style={{ alignItems: 'center', alignSelf: 'flex-end' }}>
+          <Text fontSize={12}>B.I.R. Registered</Text>
+          <Switch size="sm" colorScheme="primary" onTrackColor={'#FF4E00'} onToggle={() => setIsToggled(!isToggled)} isChecked={isToggled} />
+        </Row>
+        <Row style={{ ...DASHBOARD_CARD_STYLE.box, padding: '2%' }}>
+          <Radio.Group 
+            name="displayTypeRadioGroup" 
+            accessibilityLabel="Pick your favorite number"
+            onChange={onChange.bind(this, 'radio')}
+            defaultValue={displayType}
+          >
+            <Radio value="1" my={1} size="sm" colorScheme={'warning'} alignItems={'center'}>
+              <Text fontSize={12}>Sub-ID</Text>
+              <Menu 
+                closeOnSelect={false} 
+                w="auto" 
+                trigger={triggerProps}
+                isOpen={isOpen}
+              >
+                <Menu.OptionGroup 
+                  title="Select" 
+                  type="checkbox" 
+                  defaultValue={selectedSubIds}
+                  onChange={onChange.bind(this, 'menu')}
+                >
+                  {SUBID_SELECT_ITEMS.map((item) => (
+                    <Menu.ItemOption key={item.value} value={item.value}>{item.label}</Menu.ItemOption>
+                  ))}
+                   <Button colorScheme={'orange'} variant={'ghost'} onPress={onPress}>CLOSE</Button>
+                </Menu.OptionGroup>
+              </Menu>
+            </Radio>
+            <Radio value="2" my={1} size="sm" colorScheme={'warning'} style={{ alignSelf: 'flex-start' }}>
+              <Text fontSize={12}>Click Time</Text>
+            </Radio>
+          </Radio.Group>
+        </Row>
+        {!isLoading && displayData?.length ? <Column style={{...DASHBOARD_CARD_STYLE.box, 
+          marginBottom: "1%", 
+          paddingLeft: '4%', 
+          paddingRight: '6%',
+          paddingTop: '7%',
+          paddingBottom: '7%',
+        }}>
+          <TwoColumnLabel 
+            leftLabelStyle={{ marginBottom: '5%', fontSize: 15, fontWeight: 'bold' }}
+            rightLabelStyle={{ marginBottom: '5%', fontSize: 15, fontWeight: 'bold'  }}
+            leftLabel={'Description'} 
+            rightLabel={'Total Commission'} 
+          />
+          <TreeView
+            data={displayData} 
+            renderNode={({ node, level, isExpanded, hasChildrenNodes }) => {
+              return (
+                <Row 
+                  key={node.name}
+                  style={{ 
+                    paddingRight: level === 3 ? 13.5 : 25,
+                    paddingLeft: 10 * level,
+                    marginBottom: '1%',
+                  }}>
+                    <View style={{ flex: 1, flexWrap: 'wrap', maxWidth: '50%', alignSelf: 'flex-start' }}>
+                      <Row>
+                        {getIndicator(isExpanded, hasChildrenNodes, level)}
+                        <Text>
+                          {node.name}
+                        </Text>
+                      </Row>
+                    </View>
+                    <View style={{ position: 'absolute', right: 0 }}>
+                      <Text>
+                        {node.totalCommission.toLocaleString(undefined, { maximumFractionDigits: 5 }) || 0 }
+                      </Text>
+                    </View>
+                </Row>
+              )
+            }}
+          /> 
+            <TwoColumnLabel 
+              leftLabelStyle={{ marginTop: '5%', marginLeft: '2%', fontWeight: 'bold' }}
+              rightLabelStyle={{ marginTop: '5%', fontWeight: 'bold' }}
+              leftLabel={'Grand Total'} 
+              rightLabel={conversionData.grandTotal?.toLocaleString(undefined, { maximumFractionDigits: 5 })}
+            />
+            <TwoColumnLabel 
+              fontSize={13}
+              leftLabel={`${isToggled ? '(5%)' : '(10%)'} Tax`} 
+              leftLabelStyle={{ marginLeft: '2%' }}
+              rightLabel={getTax(isToggled, conversionData.grandTotal)}
+            />
+            <TwoColumnLabel 
+              leftLabel={`Net Profit`} 
+              leftLabelStyle={{ marginLeft: '2%', fontWeight: 'bold' }}
+              rightLabelStyle={{ fontWeight: 'bold' }}
+              rightLabel={getNetProfit(isToggled, conversionData.grandTotal)}
+            />
+        </Column> : !isLoading && <NoDataFound screenType={'conversionReport'}/>}
+        </ScrollView>
+  </View> :
+  <UnauthorizedScreen message={'Only Premium users \ncan view this screen'}/>}
+</View>
+  );
+};
+
+export default ConversionReportScreen;
